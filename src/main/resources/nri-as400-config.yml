@@ -1,0 +1,28 @@
+integration_name: com.newrelic.as400
+instances:
+  - name: pub400_jobs
+    command: job-list
+    arguments:
+      as400host: pub400.com
+      userid: USER0465
+      passwd: user0465
+    labels:
+      environment: production
+  - name: pub400_queue_QSYSOPR
+    command: message-queue
+    arguments:
+      instance: pub400.QSYSOPR
+      as400host: pub400.com
+      msgqueue: /QSYS.LIB/QSYSOPR.MSGQ
+      userid: USER0465
+      passwd: user0465
+    labels:
+      env: production
+  - name: pub400_status
+    command: system-status
+    arguments:
+      as400host: pub400.com
+      userid: USER0465
+      passwd: user0465
+    labels:
+      env: production

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+	<id>distribution</id>
+	<formats>
+		<format>tar.gz</format>
+		<format>zip</format>
+	</formats>
+	<includeBaseDirectory>true</includeBaseDirectory>
+	<baseDirectory>nri-as400</baseDirectory>
+	<files>
+		<file>
+			<source>target/nri-as400-1.0.0.jar</source>
+			<outputDirectory>/</outputDirectory>
+			<destName>nri-as400.jar</destName>
+		</file>
+		<file>
+			<source>LICENSE</source>
+			<outputDirectory>/</outputDirectory>
+			<destName>LICENSE</destName>
+		</file>
+		<file>
+			<source>README.md</source>
+			<outputDirectory>/</outputDirectory>
+			<destName>README.md</destName>
+		</file>
+	</files>
+	<fileSets>
+		<fileSet>
+			<directory>src/main/resources</directory>
+			<outputDirectory>/</outputDirectory>
+			<includes>
+	 			<include>*.*</include>
+			</includes>
+		</fileSet>
+	</fileSets>
+</assembly>
