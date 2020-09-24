@@ -9,7 +9,7 @@
 	<baseDirectory>nri-as400</baseDirectory>
 	<files>
 		<file>
-			<source>target/nri-as400-1.0.0.jar</source>
+			<source>target/nri-as400-1.1.0.jar</source>
 			<outputDirectory>/</outputDirectory>
 			<destName>nri-as400.jar</destName>
 		</file>

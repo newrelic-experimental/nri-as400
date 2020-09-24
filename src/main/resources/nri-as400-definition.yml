@@ -26,3 +26,12 @@ commands:
       - -Dcom.ibm.as400.access.AS400.guiAvailable=false
       - com.newrelic.as400.GetSystemStatus
     interval: 60
+  memory-status:
+    command:
+      - /usr/bin/java
+      - -cp
+      - ./bin/nri-as400.jar
+      - -Dcom.ibm.as400.access.AS400.guiAvailable=false
+      - com.newrelic.as400.GetMemoryStatus
+    interval: 60
+    

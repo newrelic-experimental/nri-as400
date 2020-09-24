@@ -6,6 +6,8 @@ instances:
       as400host: pub400.com
       userid: USER0465
       passwd: user0465
+      reset_wait_delay: 100
+      retrieve_msgw: false
     labels:
       environment: production
   - name: pub400_queue_QSYSOPR
@@ -26,3 +28,12 @@ instances:
       passwd: user0465
     labels:
       env: production
+  - name: pub400_memory
+    command: memory-status
+    arguments:
+      as400host: pub400.com
+      userid: USER0465
+      passwd: user0465
+    labels:
+      env: production
+    
