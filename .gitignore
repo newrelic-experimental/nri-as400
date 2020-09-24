@@ -3,4 +3,6 @@ dependency-reduced-pom.xml
 .project
 .settings
 target
+release
 .DS_Store
+**/*.html
