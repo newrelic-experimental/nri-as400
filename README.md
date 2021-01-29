@@ -1,6 +1,6 @@
 [![New Relic Experimental header](https://github.com/newrelic/opensource-website/raw/master/src/images/categories/Experimental.png)](https://opensource.newrelic.com/oss-category/#new-relic-experimental)
 
-# New Relic Infrastructure for AS/400
+# New Relic integration for AS/400
 
 iSeries / AS400 monitoring solution for New Relic Infrastructure. Actually split into 4 separate OHIs, all described below.
 
