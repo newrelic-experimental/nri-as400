@@ -13,12 +13,12 @@ export INSTANCE=pub400.QSYSOPR
 
 execute_class () {
   start_time=`date +%s`
-  /usr/bin/java -cp ./nri-as400-1.1.0.jar -Xdiag -Dcom.ibm.as400.access.AS400.guiAvailable=false com.newrelic.as400.$1
+  /usr/bin/java -cp ./nri-as400-1.2.0.jar -Xdiag -Dcom.ibm.as400.access.AS400.guiAvailable=false com.newrelic.as400.$1
   echo Time to execute $2: $(expr `date +%s` - $start_time) seconds
 }
 
 usage() {
-    echo "Usage: nri-as400-test.sh [job-list|message-queue|system-status|memory-status]"
+    echo "Usage: nri-as400-test.sh [job-list|message-queue|system-status|memory-status|disk-usage]"
     exit 1
 }
 
@@ -37,6 +37,9 @@ case "$1" in
       ;;
     "memory-status")
       execute_class "GetMemoryStatus" $1
+      ;;
+    "disk-usage")
+      execute_class "GetDiskUsage" $1
       ;;
     *)
       usage
