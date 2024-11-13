@@ -42,8 +42,5 @@ instances:
       as400host: pub400.com
       userid: USER0465
       passwd: user0465
-      ssl: false
-      warning_threshold: 80
-      critical_threshold: 90
     labels:
       env: production
