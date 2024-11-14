@@ -36,4 +36,11 @@ instances:
       passwd: user0465
     labels:
       env: production
-    
+  - name: pub400_disk_usage
+    command: disk-usage
+    arguments:
+      as400host: pub400.com
+      userid: USER0465
+      passwd: user0465
+    labels:
+      env: production

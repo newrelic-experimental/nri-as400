@@ -1,6 +1,6 @@
 name: com.newrelic.as400
 protocol_version: 1
-description: Monitors iSeries (AS400) - jobs, message queues and system status
+description: Monitors iSeries (AS400) - jobs, message queues, system status, memory status, and disk usage
 commands:
   job-list:
     command:
@@ -34,4 +34,11 @@ commands:
       - -Dcom.ibm.as400.access.AS400.guiAvailable=false
       - com.newrelic.as400.GetMemoryStatus
     interval: 60
-    
+  disk-usage:
+    command:
+      - /usr/bin/java
+      - -cp
+      - ./bin/nri-as400.jar
+      - -Dcom.ibm.as400.access.AS400.guiAvailable=false
+      - com.newrelic.as400.GetDiskUsage
+    interval: 60

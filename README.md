@@ -1,8 +1,23 @@
-[![New Relic Experimental header](https://github.com/newrelic/opensource-website/raw/master/src/images/categories/Experimental.png)](https://opensource.newrelic.com/oss-category/#new-relic-experimental)
+<a href="https://opensource.newrelic.com/oss-category/#new-relic-experimental"><picture><source media="(prefers-color-scheme: dark)" srcset="https://github.com/newrelic/opensource-website/raw/main/src/images/categories/dark/Experimental.png"><source media="(prefers-color-scheme: light)" srcset="https://github.com/newrelic/opensource-website/raw/main/src/images/categories/Experimental.png"><img alt="New Relic Open Source experimental project banner." src="https://github.com/newrelic/opensource-website/raw/main/src/images/categories/Experimental.png"></picture></a>
+
+![GitHub forks](https://img.shields.io/github/forks/newrelic-experimental/nri-as400?style=social)
+![GitHub stars](https://img.shields.io/github/stars/newrelic-experimental/nri-as400?style=social)
+![GitHub watchers](https://img.shields.io/github/watchers/newrelic-experimental/nri-as400?style=social)
+
+![GitHub all releases](https://img.shields.io/github/downloads/newrelic-experimental/nri-as400/total)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/newrelic-experimental/nri-as400)
+![GitHub last commit](https://img.shields.io/github/last-commit/newrelic-experimental/nri-as400)
+![GitHub Release Date](https://img.shields.io/github/release-date/newrelic-experimental/nri-as400)
+
+
+![GitHub issues](https://img.shields.io/github/issues/newrelic-experimental/nri-as400)
+![GitHub issues closed](https://img.shields.io/github/issues-closed/newrelic-experimental/nri-as400)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/newrelic-experimental/nri-as400)
+![GitHub pull requests closed](https://img.shields.io/github/issues-pr-closed/newrelic-experimental/nri-as400)
 
 # New Relic integration for AS/400
 
-iSeries / AS400 monitoring solution for New Relic Infrastructure. Actually split into 4 separate OHIs, all described below.
+iSeries / AS400 monitoring solution for New Relic Infrastructure. Actually split into 5 separate OHIs, all described below.
 
 ## Prerequisites
 
@@ -13,12 +28,30 @@ iSeries / AS400 monitoring solution for New Relic Infrastructure. Actually split
 
 - Unzip/gunzip nri-as400 package on host where NRI Agent is installed
 - Test your credentials and parameters with [`nri-as400-test.sh`](#testing-with-nri-as400-testsh)
-- Edit `nri-as400/nri-as400-config.yml`, configuring instances of the 4 OHIs outlined below as needed.
+- Edit `nri-as400/nri-as400-config.yml`, configuring instances of the 5 OHIs outlined below as needed.
   - [as400-job-list - iSeries Active Jobs](#config-as400-job-list)
   - [as400-memory-status - iSeries Server Memory Usage KPIs](#config-as400-memory-status)
   - [as400-message-queue - iSeries Message Queues](#config-as400-message-queue)
   - [as400-system-status - iSeries Server KPIs](#config-as400-system-status)
+  - [as400-disk-usage - iSeries Disk Usage](#config-as400-disk-usage)
 - run `nri-as400/install_linux.sh`
+
+### Configuring the OHIs
+
+#### as400-job-list
+Configuration for monitoring iSeries active jobs.
+
+#### as400-memory-status
+Configuration for monitoring iSeries server memory usage KPIs.
+
+#### as400-message-queue
+Configuration for monitoring iSeries message queues.
+
+#### as400-system-status
+Configuration for monitoring iSeries server KPIs.
+
+#### as400-disk-usage
+Configuration for monitoring iSeries disk usage.
 
 ### Testing with `nri-as400-test.sh` <a id="testing-with-nri-as400-testsh"></a>
 This collection of OHIs comes with `nri-as400-test.sh`, a shell script to verify:
@@ -26,10 +59,14 @@ This collection of OHIs comes with `nri-as400-test.sh`, a shell script to verify
 * credentials and other parameters
 * data returned by the OHI instances
 
-To use nri-as400-test.sh:
+## Using `nri-as400-test.sh`
+
+To use `nri-as400-test.sh`:
 1. Edit `nri-as400-test.sh`, setting the environment variables at the top to the settings you will use in this configuration.
 2. If not executable, run `chmod +x nri-as400-test.sh`
-3. Run `./nri-as400-test.sh [job-list|memory-status|message-queue|system-status]`
+3. Run `./nri-as400-test.sh [job-list|memory-status|message-queue|system-status|disk-usage]`
+
+This will allow you to test the configuration and ensure that the credentials and parameters are correct for each of the supported commands, including the new `disk-usage` command.
 
 ## Configuration
 
@@ -128,6 +165,31 @@ instances:
 #### Notes
 * This OHI can be configured to pull server KPIs from multiple iSeries servers.
 * Execution interval should be fine at 30 to 60 seconds.
+
+### as400-disk-usage - iSeries Disk Usage <a id="config-as400-disk-usage"></a>
+
+```yaml
+instances:
+  - name: pub400_disk_usage
+    command: disk-usage
+    arguments:
+      as400host: pub400.com
+      userid: USER0465
+      passwd: user0465
+    labels:
+      env: production
+```
+
+* `name`: The name of the instance, usually the host and "_disk_usage".
+* `as400host`: The iSeries host.
+* `userid`: The user that has access to the disk usage statistics.
+* `passwd`: The password for the user.
+* `env`: You may specify the enviroment.
+
+#### Notes
+* This OHI can be configured to pull disk usage statistics from multiple iSeries servers.
+* Execution interval should be fine at 30 to 60 seconds.
+
 
 ## Data Types
 
@@ -240,6 +302,26 @@ Attributes:
 - `currentUsersSignedOn` - Total number of users logged into the system.
 - `usersSignedOffWithPrinterOutputWaitingToPrint` - users signed off with output pending print.
 - `usersSuspendedBySystemRequest` - Users suspended by a system request
+
+### as400-disk-usage
+Event Type: `AS400:DiskUsageEvent`
+
+Attributes:
+- `event_type` - Required for all OHI events.
+- `aspNumber` - The storage pool (ASP) number.
+- `unitNumber` - The unit number of the disk.
+- `unitType` - The type of disk unit.
+- `diskType` - The disk type number of the disk.
+- `diskModel` - The model number of the disk.
+- `serialNumber` - The serial number of the disk unit.
+- `resourceName` - The unique system-assigned name of the disk unit.
+- `resourceStatus` - The status of the resource. Possible values include:
+  - `ACTIVE` - RESOURCE_NAME is active.
+  - `PASSIVE` - RESOURCE_NAME is not active.
+- `capacityMB` - The storage capacity of the unit in megabytes.
+- `availableMB` - The available space on the unit in megabytes.
+- `percentUsed` - The percentage of the disk unit that has been consumed.
+
 
 ## Support
 
