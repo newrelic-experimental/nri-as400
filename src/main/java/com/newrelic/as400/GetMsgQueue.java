@@ -169,7 +169,9 @@ public class GetMsgQueue {
 				bFirstRun = true;
 			}
 		}
-		strJSONMetrics = strJSONMetrics.substring(0, strJSONMetrics.length() - 1);
+		if (!strJSONMetrics.isEmpty()) {
+			strJSONMetrics = strJSONMetrics.substring(0, strJSONMetrics.length() - 1);
+		}
 		System.out.println(strJSONHeader + strJSONMetrics + strJSONFooter);
 	}
 }
