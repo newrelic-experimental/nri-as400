@@ -4,7 +4,7 @@
 	<groupId>com.newrelic</groupId>
 	<artifactId>nri-as400</artifactId>
 	<name>nri-as400</name>
-	<version>1.2.0</version>
+	<version>1.2.1</version>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<jt400.version>9.7</jt400.version>
