@@ -13,7 +13,7 @@ export INSTANCE=pub400.QSYSOPR
 
 execute_class () {
   start_time=`date +%s`
-  /usr/bin/java -cp ./nri-as400-1.2.0.jar -Xdiag -Dcom.ibm.as400.access.AS400.guiAvailable=false com.newrelic.as400.$1
+  /usr/bin/java -cp ./nri-as400.jar -Xdiag -Dcom.ibm.as400.access.AS400.guiAvailable=false com.newrelic.as400.$1
   echo Time to execute $2: $(expr `date +%s` - $start_time) seconds
 }
 
