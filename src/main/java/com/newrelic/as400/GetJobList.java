@@ -337,7 +337,7 @@ public class GetJobList {
 			parmlist[0] = new ProgramParameter(1024);
 			
 			// The second parm is the size of our output data buffer (1K).
-			Integer iStatusLength = new Integer(1024);
+			Integer iStatusLength = Integer.valueOf(1024);
 			byte[] statusLength = bin4Converter.toBytes(iStatusLength);
 			parmlist[1] = new ProgramParameter(statusLength);
 			
