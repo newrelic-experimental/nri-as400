@@ -475,11 +475,11 @@ public class GetSystemStatus {
 	private static String getJsonText()  {
 		String strNrName = "com.newrelic.as400-system-status";
 		String strNrEventType = "AS400:SystemStatusEvent";
-		String strNrProtoVersion = "1";
+		String strNrProtoVersion = "3";
 		String strNrIntVersion = "0.2.0";
 		String strJSONMetrics = "";
-		String strJSONHeader = ("{" + "\"name\":" + '"' + strNrName + '"' + "," + "\"protocol_version\":" + '"' + strNrProtoVersion + '"' + "," + "\"integration_version\":" + '"' + strNrIntVersion + '"' + "," + "\"metrics\":" + "[");
-		String strJSONFooter = ("]," + "\"inventory\":" + "{" + "}," + "\"events\":" + "[" + "]" + "}");
+		String strJSONHeader = ("{" + "\"name\":" + '"' + strNrName + '"' + "," + "\"protocol_version\":" + '"' + strNrProtoVersion + '"' + "," + "\"integration_version\":" + '"' + strNrIntVersion + '"' + "," + "\"data\":" + "[{" + "\"entity\":" + "{" + "\"name\":" + '"' + s_systemName.trim() + '"' + "," + "\"type\":" + '"' + "as400-system" + '"' + "}," + "\"metrics\":" + "[");
+		String strJSONFooter = ("]," + "\"inventory\":" + "{" + "}," + "\"events\":" + "[" + "]" + "}" + "]" + "}");
 
 		strJSONMetrics = strJSONMetrics +
 				"{" +

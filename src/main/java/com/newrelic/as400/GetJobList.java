@@ -52,7 +52,7 @@ public class GetJobList {
 	// Json descriptor fields
 	private static String s_strNrName = "com.newrelic.as400-job-list";
 	private static String s_strNrIntVersion = "0.2.0";
-	private static String s_strNrProtoVersion = "1";
+	private static String s_strNrProtoVersion = "3";
 
 	
 	// JOBI0200 Format fields
@@ -158,11 +158,6 @@ public class GetJobList {
 						s_strNrName +
 						'"' +
 						"," +
-						"\"host\":" +
-						'"' +
-						strAs400 +
-						'"' +
-						"," +
 						"\"protocol_version\":" +
 						'"' +
 						s_strNrProtoVersion +
@@ -173,9 +168,23 @@ public class GetJobList {
 						s_strNrIntVersion +
 						'"' +
 						"," +
+						"\"data\":" +
+						"[{" +
+						"\"entity\":" +
+						"{" +
+						"\"name\":" +
+						'"' +
+						s_systemName +
+						'"' +
+						"," +
+						"\"type\":" +
+						'"' +
+						"as400-system" +
+						'"' +
+						"}," +
 						"\"metrics\":" +
 						"[");
-			String strJSONFooter = ("]," + "\"inventory\":" + "{" + "}," + "\"events\":" + "[" + "]" + "}");
+			String strJSONFooter = ("]," + "\"inventory\":" + "{" + "}," + "\"events\":" + "[" + "]" + "}" + "]" + "}");
 			System.err.println("JobList: " + jobList.getLength());
 			
 			while (listOfJobs.hasMoreElements()) {

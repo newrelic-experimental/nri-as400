@@ -36,6 +36,7 @@ import com.ibm.as400.access.ErrorCompletingRequestException;
 import com.ibm.as400.access.MessageQueue;
 import com.ibm.as400.access.ObjectDoesNotExistException;
 import com.ibm.as400.access.QueuedMessage;
+import com.ibm.as400.access.SystemStatus;
 
 public class GetMsgQueue {
 
@@ -48,14 +49,15 @@ public class GetMsgQueue {
 		String strPass = System.getenv("PASSWD");
 		String strNrName = "com.newrelic.as400-message-queue";
 		String strNrEventType = "AS400:MessageQueueEvent";
-		String strNrProtoVersion = "1";
+		String strNrProtoVersion = "3";
 		String strNrIntVersion = "0.1.0";
 		String strJSONMetrics = "";
-		String strJSONHeader = ("{" + "\"name\":" + '"' + strNrName + '"' + "," + "\"protocol_version\":" + '"' + strNrProtoVersion + '"' + "," + "\"integration_version\":" + '"' + strNrIntVersion + '"' + "," + "\"metrics\":" + "[");
-		String strJSONFooter = ("]," + "\"inventory\":" + "{" + "}," + "\"events\":" + "[" + "]" + "}");
 		boolean bFirstRun = true;
 		String strNrEventSummary = "AS400 message queue messages";
 		AS400 as400 = new AS400(strAs400, strUser, strPass);
+		String strSystemName = new SystemStatus(as400).getSystemName().trim();
+		String strJSONHeader = ("{" + "\"name\":" + '"' + strNrName + '"' + "," + "\"protocol_version\":" + '"' + strNrProtoVersion + '"' + "," + "\"integration_version\":" + '"' + strNrIntVersion + '"' + "," + "\"data\":" + "[{" + "\"entity\":" + "{" + "\"name\":" + '"' + strSystemName + '"' + "," + "\"type\":" + '"' + "as400-system" + '"' + "}," + "\"metrics\":" + "[");
+		String strJSONFooter = ("]," + "\"inventory\":" + "{" + "}," + "\"events\":" + "[" + "]" + "}" + "]" + "}");
 //      System.out.println(as400);
 //  ----------------------------------------------------------------------
 //      Check and see if this is our first run.  If it is not, there will be a checkpoint file
