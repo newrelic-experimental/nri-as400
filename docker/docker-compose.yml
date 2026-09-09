@@ -1,0 +1,18 @@
+services:
+  newrelic-infra:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: newrelic-infra-as400
+    network_mode: host
+    cap_add:
+      - SYS_PTRACE
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - /:/host:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      # AS400 instance credentials/config — edit in place, no rebuild needed.
+      # This is your local override (gitignored); see nri-as400-config.local.yml.example.
+      - ./nri-as400-config.local.yml:/etc/newrelic-infra/integrations.d/nri-as400-config.yml:ro

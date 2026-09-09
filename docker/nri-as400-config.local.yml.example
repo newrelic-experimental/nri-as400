@@ -1,0 +1,68 @@
+integration_name: com.newrelic.as400
+instances:
+  - name: my_as400_jobs
+    command: job-list
+    arguments:
+      as400host: your.as400.host
+      userid: YOURUSERID
+      passwd: your_password
+      reset_wait_delay: 100
+      retrieve_msgw: false
+    labels:
+      environment: production
+  - name: my_as400_status
+    command: system-status
+    arguments:
+      as400host: your.as400.host
+      userid: YOURUSERID
+      passwd: your_password
+    labels:
+      environment: production
+  - name: my_as400_memory
+    command: memory-status
+    arguments:
+      as400host: your.as400.host
+      userid: YOURUSERID
+      passwd: your_password
+    labels:
+      environment: production
+  - name: my_as400_disk_usage
+    command: disk-usage
+    arguments:
+      as400host: your.as400.host
+      userid: YOURUSERID
+      passwd: your_password
+    labels:
+      environment: production
+  - name: my_as400_job_queue
+    command: job-queue-info
+    arguments:
+      as400host: your.as400.host
+      userid: YOURUSERID
+      passwd: your_password
+    labels:
+      environment: production
+  - name: my_as400_output_queue
+    command: output-queue-info
+    arguments:
+      as400host: your.as400.host
+      userid: YOURUSERID
+      passwd: your_password
+    labels:
+      environment: production
+  - name: my_as400_job_temp_storage
+    command: job-temp-storage
+    arguments:
+      as400host: your.as400.host
+      userid: YOURUSERID
+      passwd: your_password
+    labels:
+      environment: production
+  - name: my_as400_long_running_sql
+    command: long-running-sql
+    arguments:
+      as400host: your.as400.host
+      userid: YOURUSERID
+      passwd: your_password
+    labels:
+      environment: production

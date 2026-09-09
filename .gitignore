@@ -6,3 +6,5 @@ target
 release
 .DS_Store
 **/*.html
+docker/.env
+docker/nri-as400-config.local.yml
