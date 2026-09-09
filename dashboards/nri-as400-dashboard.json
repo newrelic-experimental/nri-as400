@@ -1,0 +1,419 @@
+{
+  "name": "AS400 / iSeries Monitoring",
+  "description": "Dashboard for the nri-as400 New Relic Infrastructure on-host integration. Covers system status, memory pools, active jobs, disk usage, job queues, output queues, job temp storage, long-running SQL / blocked jobs, and message queue events.",
+  "permissions": "PUBLIC_READ_WRITE",
+  "pages": [
+    {
+      "name": "System Overview",
+      "description": "AS400:SystemStatusEvent - overall CPU, storage, users, and batch job counts",
+      "widgets": [
+        {
+          "title": "CPU % Used",
+          "layout": { "column": 1, "row": 1, "width": 3, "height": 3 },
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT latest(percentProcessingUnitUsed) AS 'CPU %' FROM `AS400:SystemStatusEvent`" }
+            ]
+          }
+        },
+        {
+          "title": "Users Signed On",
+          "layout": { "column": 4, "row": 1, "width": 3, "height": 3 },
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT latest(currentUsersSignedOn) AS 'Users Signed On' FROM `AS400:SystemStatusEvent`" }
+            ]
+          }
+        },
+        {
+          "title": "Jobs In System",
+          "layout": { "column": 7, "row": 1, "width": 3, "height": 3 },
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT latest(numberOfJobsInSystem) AS 'Jobs In System' FROM `AS400:SystemStatusEvent`" }
+            ]
+          }
+        },
+        {
+          "title": "Active Threads",
+          "layout": { "column": 10, "row": 1, "width": 3, "height": 3 },
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT latest(activeThreadsInSystem) AS 'Active Threads' FROM `AS400:SystemStatusEvent`" }
+            ]
+          }
+        },
+        {
+          "title": "CPU % Used Over Time",
+          "layout": { "column": 1, "row": 4, "width": 6, "height": 3 },
+          "visualization": { "id": "viz.line" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT average(percentProcessingUnitUsed) AS 'CPU %' FROM `AS400:SystemStatusEvent` TIMESERIES" }
+            ]
+          }
+        },
+        {
+          "title": "System ASP % Used Over Time",
+          "layout": { "column": 7, "row": 4, "width": 6, "height": 3 },
+          "visualization": { "id": "viz.line" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT average(percentSystemASPUsed) AS 'ASP %' FROM `AS400:SystemStatusEvent` TIMESERIES" }
+            ]
+          }
+        },
+        {
+          "title": "Batch Job Queue Counts Over Time",
+          "layout": { "column": 1, "row": 7, "width": 12, "height": 3 },
+          "visualization": { "id": "viz.line" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT average(numberOfBatchJobsRunning) AS 'Running', average(numberOfBatchJobsHeldOnQueue) AS 'Held', average(numberOfBatchJobsWaitingForMessage) AS 'Waiting For Message', average(numberOfBatchJobsWaitingToRunOrAlreadyScheduled) AS 'Waiting/Scheduled' FROM `AS400:SystemStatusEvent` TIMESERIES" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Memory & Storage Pools",
+      "description": "AS400:MemoryStatusEvent - per-pool storage, faults, and thread eligibility",
+      "widgets": [
+        {
+          "title": "Main Storage Size (MB)",
+          "layout": { "column": 1, "row": 1, "width": 3, "height": 3 },
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT latest(mainStorageSize) AS 'Main Storage (MB)' FROM `AS400:MemoryStatusEvent`" }
+            ]
+          }
+        },
+        {
+          "title": "Number Of Pools",
+          "layout": { "column": 4, "row": 1, "width": 3, "height": 3 },
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT latest(numberOfPools) AS 'Pools' FROM `AS400:MemoryStatusEvent`" }
+            ]
+          }
+        },
+        {
+          "title": "Storage Pools",
+          "layout": { "column": 7, "row": 1, "width": 6, "height": 3 },
+          "visualization": { "id": "viz.table" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT latest(poolSize) AS 'Pool Size (MB)', latest(currentThreads) AS 'Current Threads', latest(maximumActiveThreads) AS 'Max Threads', latest(status) AS 'Status', latest(subsystemName) AS 'Subsystem' FROM `AS400:MemoryStatusEvent` FACET poolName LIMIT 50" }
+            ]
+          }
+        },
+        {
+          "title": "Database vs Non-Database Page Faults by Pool",
+          "layout": { "column": 1, "row": 4, "width": 12, "height": 3 },
+          "visualization": { "id": "viz.line" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT average(databaseFaults) AS 'DB Faults', average(nondatabaseFaults) AS 'Non-DB Faults' FROM `AS400:MemoryStatusEvent` FACET poolName TIMESERIES LIMIT 10" }
+            ]
+          }
+        },
+        {
+          "title": "Active→Ineligible / Wait→Ineligible Transitions by Pool",
+          "layout": { "column": 1, "row": 7, "width": 12, "height": 3 },
+          "visualization": { "id": "viz.line" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT average(activeToIneligible) AS 'Active→Ineligible', average(waitToIneligible) AS 'Wait→Ineligible' FROM `AS400:MemoryStatusEvent` FACET poolName TIMESERIES LIMIT 10" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Active Jobs",
+      "description": "AS400:JobList - per-job CPU, status, and queue information",
+      "widgets": [
+        {
+          "title": "Distinct Active Jobs",
+          "layout": { "column": 1, "row": 1, "width": 3, "height": 3 },
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT uniqueCount(jobName) AS 'Active Jobs' FROM `AS400:JobList`" }
+            ]
+          }
+        },
+        {
+          "title": "Average Job CPU %",
+          "layout": { "column": 4, "row": 1, "width": 3, "height": 3 },
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT average(jobCPUPct) AS 'Avg CPU %' FROM `AS400:JobList`" }
+            ]
+          }
+        },
+        {
+          "title": "Top Jobs By CPU %",
+          "layout": { "column": 7, "row": 1, "width": 6, "height": 3 },
+          "visualization": { "id": "viz.table" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT latest(jobCPUPct) AS 'CPU %', latest(jobUser) AS 'User', latest(jobStatus) AS 'Status', latest(jobSubsystem) AS 'Subsystem' FROM `AS400:JobList` FACET jobName LIMIT 20" }
+            ]
+          }
+        },
+        {
+          "title": "Average Job CPU % Over Time",
+          "layout": { "column": 1, "row": 4, "width": 12, "height": 3 },
+          "visualization": { "id": "viz.line" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT average(jobCPUPct) AS 'Avg CPU %' FROM `AS400:JobList` TIMESERIES" }
+            ]
+          }
+        },
+        {
+          "title": "Job Status Distribution",
+          "layout": { "column": 1, "row": 7, "width": 6, "height": 3 },
+          "visualization": { "id": "viz.bar" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT count(*) FROM `AS400:JobList` FACET jobStatus LIMIT 20" }
+            ]
+          }
+        },
+        {
+          "title": "Jobs Currently Waiting On A Message (MSGW)",
+          "layout": { "column": 7, "row": 7, "width": 6, "height": 3 },
+          "visualization": { "id": "viz.table" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT jobName, jobUser, jobSubsystem, lastJobLogMsg FROM `AS400:JobList` WHERE activeJobStatus = 'MSGW' LIMIT 50" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Disk Usage",
+      "description": "AS400:DiskUsageEvent - per-unit disk capacity and utilization",
+      "widgets": [
+        {
+          "title": "Disk Units Monitored",
+          "layout": { "column": 1, "row": 1, "width": 3, "height": 3 },
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT uniqueCount(resourceName) AS 'Disk Units' FROM `AS400:DiskUsageEvent`" }
+            ]
+          }
+        },
+        {
+          "title": "Max Disk % Used",
+          "layout": { "column": 4, "row": 1, "width": 3, "height": 3 },
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT max(percentUsed) AS 'Max % Used' FROM `AS400:DiskUsageEvent`" }
+            ]
+          }
+        },
+        {
+          "title": "Disk Units",
+          "layout": { "column": 7, "row": 1, "width": 6, "height": 3 },
+          "visualization": { "id": "viz.table" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT latest(percentUsed) AS '% Used', latest(capacityMB) AS 'Capacity (MB)', latest(availableMB) AS 'Available (MB)', latest(resourceStatus) AS 'Status', latest(diskType) AS 'Type' FROM `AS400:DiskUsageEvent` FACET resourceName LIMIT 100" }
+            ]
+          }
+        },
+        {
+          "title": "Disk % Used Over Time (Top 10 Units)",
+          "layout": { "column": 1, "row": 4, "width": 12, "height": 3 },
+          "visualization": { "id": "viz.line" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT average(percentUsed) FROM `AS400:DiskUsageEvent` FACET resourceName TIMESERIES LIMIT 10" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Job Queues & Output Queues",
+      "description": "AS400:JobQueueEvent and AS400:OutputQueueEvent - queue depth and spooled file backlog",
+      "widgets": [
+        {
+          "title": "Job Queues",
+          "layout": { "column": 1, "row": 1, "width": 6, "height": 3 },
+          "visualization": { "id": "viz.table" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT latest(numberOfJobs) AS 'Jobs', latest(activeJobs) AS 'Active', latest(heldJobs) AS 'Held', latest(releasedJobs) AS 'Released', latest(scheduledJobs) AS 'Scheduled', latest(maximumActiveJobs) AS 'Max Active', latest(jobQueueStatus) AS 'Status', latest(subsystemName) AS 'Subsystem' FROM `AS400:JobQueueEvent` FACET jobQueueLibrary, jobQueueName LIMIT 100" }
+            ]
+          }
+        },
+        {
+          "title": "Output Queues (Top Spooled File Backlog)",
+          "layout": { "column": 7, "row": 1, "width": 6, "height": 3 },
+          "visualization": { "id": "viz.table" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT latest(numberOfFiles) AS 'Spooled Files', latest(outputQueueStatus) AS 'Status' FROM `AS400:OutputQueueEvent` FACET outputQueueLibrary, outputQueueName LIMIT 100" }
+            ]
+          }
+        },
+        {
+          "title": "Total Active Jobs Across Job Queues",
+          "layout": { "column": 1, "row": 4, "width": 3, "height": 3 },
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT sum(v) AS 'Active Jobs' FROM (SELECT latest(activeJobs) AS v FROM `AS400:JobQueueEvent` FACET jobQueueLibrary, jobQueueName LIMIT MAX)" }
+            ]
+          }
+        },
+        {
+          "title": "Total Held Jobs Across Job Queues",
+          "layout": { "column": 4, "row": 4, "width": 3, "height": 3 },
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT sum(v) AS 'Held Jobs' FROM (SELECT latest(heldJobs) AS v FROM `AS400:JobQueueEvent` FACET jobQueueLibrary, jobQueueName LIMIT MAX)" }
+            ]
+          }
+        },
+        {
+          "title": "Total Spooled Files Right Now",
+          "layout": { "column": 7, "row": 4, "width": 3, "height": 3 },
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT sum(v) AS 'Spooled Files' FROM (SELECT latest(numberOfFiles) AS v FROM `AS400:OutputQueueEvent` FACET outputQueueLibrary, outputQueueName LIMIT MAX)" }
+            ]
+          }
+        },
+        {
+          "title": "Held Output Queues",
+          "layout": { "column": 10, "row": 4, "width": 3, "height": 3 },
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT count(*) AS 'Held Output Queues' FROM (SELECT latest(outputQueueStatus) AS v FROM `AS400:OutputQueueEvent` FACET outputQueueLibrary, outputQueueName LIMIT MAX) WHERE v = 'HELD'" }
+            ]
+          }
+        },
+        {
+          "title": "Spooled File Backlog Over Time (Top 10 Output Queues)",
+          "layout": { "column": 1, "row": 7, "width": 12, "height": 3 },
+          "visualization": { "id": "viz.line" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT average(numberOfFiles) FROM `AS400:OutputQueueEvent` FACET outputQueueLibrary, outputQueueName TIMESERIES LIMIT 10" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Job Temp Storage & Long-Running SQL",
+      "description": "AS400:JobTempStorageEvent and AS400:LongRunningSqlEvent - top temp storage consumers and blocked/long-running SQL jobs",
+      "widgets": [
+        {
+          "title": "Top Jobs By Temporary Storage",
+          "layout": { "column": 1, "row": 1, "width": 6, "height": 3 },
+          "visualization": { "id": "viz.table" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT latest(temporaryStorageMB) AS 'Temp Storage (MB)', latest(jobType) AS 'Type', latest(jobStatus) AS 'Status', latest(subsystem) AS 'Subsystem', latest(authorizationName) AS 'User' FROM `AS400:JobTempStorageEvent` FACET jobName LIMIT 25" }
+            ]
+          }
+        },
+        {
+          "title": "Long-Running SQL / Blocked Jobs",
+          "layout": { "column": 7, "row": 1, "width": 6, "height": 3 },
+          "visualization": { "id": "viz.table" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT latest(jobStatus) AS 'Status', latest(sqlStatementStatus) AS 'SQL Status', latest(elapsedTimeSeconds) AS 'Elapsed (s)', latest(databaseLockWaitTimeMs) AS 'DB Lock Wait (ms)', latest(nonDatabaseLockWaitTimeMs) AS 'Non-DB Lock Wait (ms)', latest(sqlStatementText) AS 'SQL Text' FROM `AS400:LongRunningSqlEvent` FACET jobName LIMIT 25" }
+            ]
+          }
+        },
+        {
+          "title": "Max Temporary Storage (MB)",
+          "layout": { "column": 1, "row": 4, "width": 3, "height": 3 },
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT max(temporaryStorageMB) AS 'Max Temp Storage (MB)' FROM `AS400:JobTempStorageEvent`" }
+            ]
+          }
+        },
+        {
+          "title": "Blocked / Active-SQL Jobs",
+          "layout": { "column": 4, "row": 4, "width": 3, "height": 3 },
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT uniqueCount(jobName) AS 'Jobs Flagged' FROM `AS400:LongRunningSqlEvent`" }
+            ]
+          }
+        },
+        {
+          "title": "Max Temporary Storage Over Time",
+          "layout": { "column": 7, "row": 4, "width": 6, "height": 3 },
+          "visualization": { "id": "viz.line" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT max(temporaryStorageMB) AS 'Max Temp Storage (MB)' FROM `AS400:JobTempStorageEvent` TIMESERIES" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Message Queue",
+      "description": "AS400:MessageQueueEvent - monitored message queue activity",
+      "widgets": [
+        {
+          "title": "Recent Messages",
+          "layout": { "column": 1, "row": 1, "width": 8, "height": 3 },
+          "visualization": { "id": "viz.table" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT message, severity, job, user, type FROM `AS400:MessageQueueEvent` LIMIT 100" }
+            ]
+          }
+        },
+        {
+          "title": "Max Severity (Recent)",
+          "layout": { "column": 9, "row": 1, "width": 4, "height": 3 },
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT max(severity) AS 'Max Severity' FROM `AS400:MessageQueueEvent`" }
+            ]
+          }
+        },
+        {
+          "title": "Message Count By Severity",
+          "layout": { "column": 1, "row": 4, "width": 12, "height": 3 },
+          "visualization": { "id": "viz.bar" },
+          "rawConfiguration": {
+            "nrqlQueries": [
+              { "accountId": 7190450, "query": "SELECT count(*) FROM `AS400:MessageQueueEvent` FACET severity LIMIT 20" }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
