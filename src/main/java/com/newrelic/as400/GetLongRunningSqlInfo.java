@@ -54,15 +54,23 @@ public class GetLongRunningSqlInfo {
                 String jobName = rs.getString("JOB_NAME");
                 String jobStatus = rs.getString("JOB_STATUS");
                 String subsystem = rs.getString("SUBSYSTEM");
+                // ELAPSED_TIME on QSYS2.ACTIVE_JOB_INFO is one of IBM's "elapsed statistics" columns:
+                // it measures time since this job's stats were last explicitly reset, not how long
+                // the job has been stuck. Since this query never resets stats, it reads 0 for the
+                // (typical) job that's never had a reset. lockWaitTimeMs below is the real signal.
                 double elapsedTimeSeconds = rs.getDouble("ELAPSED_TIME");
                 String sqlStatementText = rs.getString("SQL_STATEMENT_TEXT");
                 String sqlStatementStatus = rs.getString("SQL_STATEMENT_STATUS");
                 Timestamp sqlStatementStartTimestamp = rs.getTimestamp("SQL_STATEMENT_START_TIMESTAMP");
                 long databaseLockWaitTimeMs = rs.getLong("DATABASE_LOCK_WAIT_TIME");
                 long nonDatabaseLockWaitTimeMs = rs.getLong("NON_DATABASE_LOCK_WAIT_TIME");
+                long lockWaitTimeMs = Math.max(databaseLockWaitTimeMs, nonDatabaseLockWaitTimeMs);
 
                 jsonMetrics.append("{")
                         .append("\"event_type\":\"AS400:LongRunningSqlEvent\",")
+                        .append("\"systemName\":\"").append(systemName).append("\",")
+                        .append("\"hostName\":\"").append(CommonUtil.getHostName(as400)).append("\",")
+                        .append("\"includeInIseriesEntity\":true,")
                         .append("\"jobName\":\"").append(jsonEscape(jobName == null ? "" : jobName.trim())).append("\",")
                         .append("\"jobStatus\":\"").append(jsonEscape(jobStatus == null ? "" : jobStatus.trim())).append("\",")
                         .append("\"subsystem\":\"").append(jsonEscape(subsystem == null ? "" : subsystem.trim())).append("\",")
@@ -71,7 +79,8 @@ public class GetLongRunningSqlInfo {
                         .append("\"sqlStatementStatus\":\"").append(jsonEscape(sqlStatementStatus == null ? "" : sqlStatementStatus.trim())).append("\",")
                         .append("\"sqlStatementStartTimestamp\":\"").append(sqlStatementStartTimestamp == null ? "" : sqlStatementStartTimestamp.toString()).append("\",")
                         .append("\"databaseLockWaitTimeMs\":").append(databaseLockWaitTimeMs).append(",")
-                        .append("\"nonDatabaseLockWaitTimeMs\":").append(nonDatabaseLockWaitTimeMs)
+                        .append("\"nonDatabaseLockWaitTimeMs\":").append(nonDatabaseLockWaitTimeMs).append(",")
+                        .append("\"lockWaitTimeMs\":").append(lockWaitTimeMs)
                         .append("},");
             }
 
@@ -83,14 +92,11 @@ public class GetLongRunningSqlInfo {
 
             response.append("{")
                     .append("\"name\":\"com.newrelic.as400-long-running-sql\",")
-                    .append("\"protocol_version\":\"3\",")
+                    .append("\"protocol_version\":\"1\",")
                     .append(Version)
-                    .append("\"data\":[{")
-                    .append("\"entity\":{\"name\":\"").append(systemName).append("\",\"type\":\"as400-system\"},")
                     .append("\"metrics\":").append(jsonMetrics.toString()).append(",")
                     .append("\"inventory\":{},")
                     .append("\"events\":[]")
-                    .append("}]")
                     .append("}");
 
             returnValue = Constants.OK;

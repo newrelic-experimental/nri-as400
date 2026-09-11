@@ -60,6 +60,9 @@ public class GetJobQueueInfo {
 
                 jsonMetrics.append("{")
                         .append("\"event_type\":\"AS400:JobQueueEvent\",")
+                        .append("\"systemName\":\"").append(systemName).append("\",")
+                        .append("\"hostName\":\"").append(CommonUtil.getHostName(as400)).append("\",")
+                        .append("\"includeInIseriesEntity\":true,")
                         .append("\"jobQueueName\":\"").append(jobQueueName == null ? "" : jobQueueName.trim()).append("\",")
                         .append("\"jobQueueLibrary\":\"").append(jobQueueLibrary == null ? "" : jobQueueLibrary.trim()).append("\",")
                         .append("\"jobQueueStatus\":\"").append(jobQueueStatus == null ? "" : jobQueueStatus.trim()).append("\",")
@@ -82,14 +85,11 @@ public class GetJobQueueInfo {
 
             response.append("{")
                     .append("\"name\":\"com.newrelic.as400-job-queue-info\",")
-                    .append("\"protocol_version\":\"3\",")
+                    .append("\"protocol_version\":\"1\",")
                     .append(Version)
-                    .append("\"data\":[{")
-                    .append("\"entity\":{\"name\":\"").append(systemName).append("\",\"type\":\"as400-system\"},")
                     .append("\"metrics\":").append(jsonMetrics.toString()).append(",")
                     .append("\"inventory\":{},")
                     .append("\"events\":[]")
-                    .append("}]")
                     .append("}");
 
             returnValue = Constants.OK;

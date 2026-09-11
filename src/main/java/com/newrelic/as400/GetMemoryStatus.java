@@ -14,6 +14,7 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.*;
 import com.ibm.as400.access.*;
+import com.newrelic.labs.utils.CommonUtil;
 
 public class GetMemoryStatus {
 	
@@ -83,7 +84,7 @@ public class GetMemoryStatus {
             {
             	getFormat0400_Data(as400, as400Data);
             }
-            String strJson = getJsonText();
+            String strJson = getJsonText(as400);
             System.out.println(strJson);
             
             // This program is done running program so disconnect from
@@ -460,14 +461,14 @@ public class GetMemoryStatus {
 	    return ByteBuffer.wrap(bytes).getDouble();
 	}
 	
-	private static String getJsonText()  {
+	private static String getJsonText(AS400 as400)  {
 		String strNrName = "com.newrelic.as400-memory-status";
 		String strNrEventType = "AS400:MemoryStatusEvent";
-		String strNrProtoVersion = "3";
+		String strNrProtoVersion = "1";
 		String strNrIntVersion = "0.2.0";
 		String strJSONMetrics = "";
-		String strJSONHeader = ("{" + "\"name\":" + '"' + strNrName + '"' + "," + "\"protocol_version\":" + '"' + strNrProtoVersion + '"' + "," + "\"integration_version\":" + '"' + strNrIntVersion + '"' + "," + "\"data\":" + "[{" + "\"entity\":" + "{" + "\"name\":" + '"' + s_ssts0400_systemName + '"' + "," + "\"type\":" + '"' + "as400-system" + '"' + "}," + "\"metrics\":" + "[");
-		String strJSONFooter = ("]," + "\"inventory\":" + "{" + "}," + "\"events\":" + "[" + "]" + "}" + "]" + "}");
+		String strJSONHeader = ("{" + "\"name\":" + '"' + strNrName + '"' + "," + "\"protocol_version\":" + '"' + strNrProtoVersion + '"' + "," + "\"integration_version\":" + '"' + strNrIntVersion + '"' + "," + "\"metrics\":" + "[");
+		String strJSONFooter = ("]," + "\"inventory\":" + "{" + "}," + "\"events\":" + "[" + "]" + "}");
 		
 		String instanceGUID = java.util.UUID.randomUUID().toString();
 		
@@ -489,6 +490,14 @@ public class GetMemoryStatus {
 						'"' +
 						instanceGUID +
 						'"' +
+						"," +
+						"\"hostName\":" +
+						'"' +
+						CommonUtil.getHostName(as400) +
+						'"' +
+						"," +
+						"\"includeInIseriesEntity\":" +
+						true +
 						"," +
 						"\"systemName\":" +
 						'"' +

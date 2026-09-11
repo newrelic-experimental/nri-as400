@@ -13,7 +13,7 @@
           "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT latest(percentProcessingUnitUsed) AS 'CPU %' FROM `AS400:SystemStatusEvent`" }
+              { "accountId": 0, "query": "SELECT latest(percentProcessingUnitUsed) AS 'CPU %' FROM `AS400:SystemStatusEvent`" }
             ]
           }
         },
@@ -23,7 +23,7 @@
           "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT latest(currentUsersSignedOn) AS 'Users Signed On' FROM `AS400:SystemStatusEvent`" }
+              { "accountId": 0, "query": "SELECT latest(currentUsersSignedOn) AS 'Users Signed On' FROM `AS400:SystemStatusEvent`" }
             ]
           }
         },
@@ -33,7 +33,7 @@
           "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT latest(numberOfJobsInSystem) AS 'Jobs In System' FROM `AS400:SystemStatusEvent`" }
+              { "accountId": 0, "query": "SELECT latest(numberOfJobsInSystem) AS 'Jobs In System' FROM `AS400:SystemStatusEvent`" }
             ]
           }
         },
@@ -43,7 +43,7 @@
           "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT latest(activeThreadsInSystem) AS 'Active Threads' FROM `AS400:SystemStatusEvent`" }
+              { "accountId": 0, "query": "SELECT latest(activeThreadsInSystem) AS 'Active Threads' FROM `AS400:SystemStatusEvent`" }
             ]
           }
         },
@@ -53,7 +53,7 @@
           "visualization": { "id": "viz.line" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT average(percentProcessingUnitUsed) AS 'CPU %' FROM `AS400:SystemStatusEvent` TIMESERIES" }
+              { "accountId": 0, "query": "SELECT average(percentProcessingUnitUsed) AS 'CPU %' FROM `AS400:SystemStatusEvent` TIMESERIES" }
             ]
           }
         },
@@ -63,7 +63,7 @@
           "visualization": { "id": "viz.line" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT average(percentSystemASPUsed) AS 'ASP %' FROM `AS400:SystemStatusEvent` TIMESERIES" }
+              { "accountId": 0, "query": "SELECT average(percentSystemASPUsed) AS 'ASP %' FROM `AS400:SystemStatusEvent` TIMESERIES" }
             ]
           }
         },
@@ -73,7 +73,7 @@
           "visualization": { "id": "viz.line" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT average(numberOfBatchJobsRunning) AS 'Running', average(numberOfBatchJobsHeldOnQueue) AS 'Held', average(numberOfBatchJobsWaitingForMessage) AS 'Waiting For Message', average(numberOfBatchJobsWaitingToRunOrAlreadyScheduled) AS 'Waiting/Scheduled' FROM `AS400:SystemStatusEvent` TIMESERIES" }
+              { "accountId": 0, "query": "SELECT average(numberOfBatchJobsRunning) AS 'Running', average(numberOfBatchJobsHeldOnQueue) AS 'Held', average(numberOfBatchJobsWaitingForMessage) AS 'Waiting For Message', average(numberOfBatchJobsWaitingToRunOrAlreadyScheduled) AS 'Waiting/Scheduled' FROM `AS400:SystemStatusEvent` TIMESERIES" }
             ]
           }
         }
@@ -89,7 +89,7 @@
           "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT latest(mainStorageSize) AS 'Main Storage (MB)' FROM `AS400:MemoryStatusEvent`" }
+              { "accountId": 0, "query": "SELECT latest(mainStorageSize) AS 'Main Storage (MB)' FROM `AS400:MemoryStatusEvent`" }
             ]
           }
         },
@@ -99,7 +99,7 @@
           "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT latest(numberOfPools) AS 'Pools' FROM `AS400:MemoryStatusEvent`" }
+              { "accountId": 0, "query": "SELECT latest(numberOfPools) AS 'Pools' FROM `AS400:MemoryStatusEvent`" }
             ]
           }
         },
@@ -109,7 +109,7 @@
           "visualization": { "id": "viz.table" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT latest(poolSize) AS 'Pool Size (MB)', latest(currentThreads) AS 'Current Threads', latest(maximumActiveThreads) AS 'Max Threads', latest(status) AS 'Status', latest(subsystemName) AS 'Subsystem' FROM `AS400:MemoryStatusEvent` FACET poolName LIMIT 50" }
+              { "accountId": 0, "query": "SELECT latest(poolSize) AS 'Pool Size (MB)', latest(currentThreads) AS 'Current Threads', latest(maximumActiveThreads) AS 'Max Threads', latest(status) AS 'Status', latest(subsystemName) AS 'Subsystem' FROM `AS400:MemoryStatusEvent` FACET poolName LIMIT 50" }
             ]
           }
         },
@@ -119,7 +119,7 @@
           "visualization": { "id": "viz.line" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT average(databaseFaults) AS 'DB Faults', average(nondatabaseFaults) AS 'Non-DB Faults' FROM `AS400:MemoryStatusEvent` FACET poolName TIMESERIES LIMIT 10" }
+              { "accountId": 0, "query": "SELECT average(databaseFaults) AS 'DB Faults', average(nondatabaseFaults) AS 'Non-DB Faults' FROM `AS400:MemoryStatusEvent` FACET poolName TIMESERIES LIMIT 10" }
             ]
           }
         },
@@ -129,7 +129,7 @@
           "visualization": { "id": "viz.line" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT average(activeToIneligible) AS 'Active→Ineligible', average(waitToIneligible) AS 'Wait→Ineligible' FROM `AS400:MemoryStatusEvent` FACET poolName TIMESERIES LIMIT 10" }
+              { "accountId": 0, "query": "SELECT average(activeToIneligible) AS 'Active→Ineligible', average(waitToIneligible) AS 'Wait→Ineligible' FROM `AS400:MemoryStatusEvent` FACET poolName TIMESERIES LIMIT 10" }
             ]
           }
         }
@@ -145,7 +145,7 @@
           "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT uniqueCount(jobName) AS 'Active Jobs' FROM `AS400:JobList`" }
+              { "accountId": 0, "query": "SELECT uniqueCount(jobName) AS 'Active Jobs' FROM `AS400:JobList`" }
             ]
           }
         },
@@ -155,7 +155,7 @@
           "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT average(jobCPUPct) AS 'Avg CPU %' FROM `AS400:JobList`" }
+              { "accountId": 0, "query": "SELECT average(jobCPUPct) AS 'Avg CPU %' FROM `AS400:JobList`" }
             ]
           }
         },
@@ -165,7 +165,7 @@
           "visualization": { "id": "viz.table" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT latest(jobCPUPct) AS 'CPU %', latest(jobUser) AS 'User', latest(jobStatus) AS 'Status', latest(jobSubsystem) AS 'Subsystem' FROM `AS400:JobList` FACET jobName LIMIT 20" }
+              { "accountId": 0, "query": "SELECT latest(jobCPUPct) AS 'CPU %', latest(jobUser) AS 'User', latest(jobStatus) AS 'Status', latest(jobSubsystem) AS 'Subsystem' FROM `AS400:JobList` FACET jobName LIMIT 20" }
             ]
           }
         },
@@ -175,7 +175,7 @@
           "visualization": { "id": "viz.line" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT average(jobCPUPct) AS 'Avg CPU %' FROM `AS400:JobList` TIMESERIES" }
+              { "accountId": 0, "query": "SELECT average(jobCPUPct) AS 'Avg CPU %' FROM `AS400:JobList` TIMESERIES" }
             ]
           }
         },
@@ -185,7 +185,7 @@
           "visualization": { "id": "viz.bar" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT count(*) FROM `AS400:JobList` FACET jobStatus LIMIT 20" }
+              { "accountId": 0, "query": "SELECT count(*) FROM `AS400:JobList` FACET jobStatus LIMIT 20" }
             ]
           }
         },
@@ -195,7 +195,7 @@
           "visualization": { "id": "viz.table" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT jobName, jobUser, jobSubsystem, lastJobLogMsg FROM `AS400:JobList` WHERE activeJobStatus = 'MSGW' LIMIT 50" }
+              { "accountId": 0, "query": "SELECT jobName, jobUser, jobSubsystem, lastJobLogMsg FROM `AS400:JobList` WHERE activeJobStatus = 'MSGW' LIMIT 50" }
             ]
           }
         }
@@ -211,7 +211,7 @@
           "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT uniqueCount(resourceName) AS 'Disk Units' FROM `AS400:DiskUsageEvent`" }
+              { "accountId": 0, "query": "SELECT uniqueCount(resourceName) AS 'Disk Units' FROM `AS400:DiskUsageEvent`" }
             ]
           }
         },
@@ -221,7 +221,7 @@
           "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT max(percentUsed) AS 'Max % Used' FROM `AS400:DiskUsageEvent`" }
+              { "accountId": 0, "query": "SELECT max(percentUsed) AS 'Max % Used' FROM `AS400:DiskUsageEvent`" }
             ]
           }
         },
@@ -231,7 +231,7 @@
           "visualization": { "id": "viz.table" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT latest(percentUsed) AS '% Used', latest(capacityMB) AS 'Capacity (MB)', latest(availableMB) AS 'Available (MB)', latest(resourceStatus) AS 'Status', latest(diskType) AS 'Type' FROM `AS400:DiskUsageEvent` FACET resourceName LIMIT 100" }
+              { "accountId": 0, "query": "SELECT latest(percentUsed) AS '% Used', latest(capacityMB) AS 'Capacity (MB)', latest(availableMB) AS 'Available (MB)', latest(resourceStatus) AS 'Status', latest(diskType) AS 'Type' FROM `AS400:DiskUsageEvent` FACET resourceName LIMIT 100" }
             ]
           }
         },
@@ -241,7 +241,7 @@
           "visualization": { "id": "viz.line" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT average(percentUsed) FROM `AS400:DiskUsageEvent` FACET resourceName TIMESERIES LIMIT 10" }
+              { "accountId": 0, "query": "SELECT average(percentUsed) FROM `AS400:DiskUsageEvent` FACET resourceName TIMESERIES LIMIT 10" }
             ]
           }
         }
@@ -257,7 +257,7 @@
           "visualization": { "id": "viz.table" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT latest(numberOfJobs) AS 'Jobs', latest(activeJobs) AS 'Active', latest(heldJobs) AS 'Held', latest(releasedJobs) AS 'Released', latest(scheduledJobs) AS 'Scheduled', latest(maximumActiveJobs) AS 'Max Active', latest(jobQueueStatus) AS 'Status', latest(subsystemName) AS 'Subsystem' FROM `AS400:JobQueueEvent` FACET jobQueueLibrary, jobQueueName LIMIT 100" }
+              { "accountId": 0, "query": "SELECT latest(numberOfJobs) AS 'Jobs', latest(activeJobs) AS 'Active', latest(heldJobs) AS 'Held', latest(releasedJobs) AS 'Released', latest(scheduledJobs) AS 'Scheduled', latest(maximumActiveJobs) AS 'Max Active', latest(jobQueueStatus) AS 'Status', latest(subsystemName) AS 'Subsystem' FROM `AS400:JobQueueEvent` FACET jobQueueLibrary, jobQueueName LIMIT 100" }
             ]
           }
         },
@@ -267,7 +267,7 @@
           "visualization": { "id": "viz.table" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT latest(numberOfFiles) AS 'Spooled Files', latest(outputQueueStatus) AS 'Status' FROM `AS400:OutputQueueEvent` FACET outputQueueLibrary, outputQueueName LIMIT 100" }
+              { "accountId": 0, "query": "SELECT latest(numberOfFiles) AS 'Spooled Files', latest(outputQueueStatus) AS 'Status' FROM `AS400:OutputQueueEvent` FACET outputQueueLibrary, outputQueueName LIMIT 100" }
             ]
           }
         },
@@ -277,7 +277,7 @@
           "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT sum(v) AS 'Active Jobs' FROM (SELECT latest(activeJobs) AS v FROM `AS400:JobQueueEvent` FACET jobQueueLibrary, jobQueueName LIMIT MAX)" }
+              { "accountId": 0, "query": "SELECT sum(v) AS 'Active Jobs' FROM (SELECT latest(activeJobs) AS v FROM `AS400:JobQueueEvent` FACET jobQueueLibrary, jobQueueName LIMIT MAX)" }
             ]
           }
         },
@@ -287,7 +287,7 @@
           "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT sum(v) AS 'Held Jobs' FROM (SELECT latest(heldJobs) AS v FROM `AS400:JobQueueEvent` FACET jobQueueLibrary, jobQueueName LIMIT MAX)" }
+              { "accountId": 0, "query": "SELECT sum(v) AS 'Held Jobs' FROM (SELECT latest(heldJobs) AS v FROM `AS400:JobQueueEvent` FACET jobQueueLibrary, jobQueueName LIMIT MAX)" }
             ]
           }
         },
@@ -297,7 +297,7 @@
           "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT sum(v) AS 'Spooled Files' FROM (SELECT latest(numberOfFiles) AS v FROM `AS400:OutputQueueEvent` FACET outputQueueLibrary, outputQueueName LIMIT MAX)" }
+              { "accountId": 0, "query": "SELECT sum(v) AS 'Spooled Files' FROM (SELECT latest(numberOfFiles) AS v FROM `AS400:OutputQueueEvent` FACET outputQueueLibrary, outputQueueName LIMIT MAX)" }
             ]
           }
         },
@@ -307,7 +307,7 @@
           "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT count(*) AS 'Held Output Queues' FROM (SELECT latest(outputQueueStatus) AS v FROM `AS400:OutputQueueEvent` FACET outputQueueLibrary, outputQueueName LIMIT MAX) WHERE v = 'HELD'" }
+              { "accountId": 0, "query": "SELECT count(*) AS 'Held Output Queues' FROM (SELECT latest(outputQueueStatus) AS v FROM `AS400:OutputQueueEvent` FACET outputQueueLibrary, outputQueueName LIMIT MAX) WHERE v = 'HELD'" }
             ]
           }
         },
@@ -317,7 +317,7 @@
           "visualization": { "id": "viz.line" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT average(numberOfFiles) FROM `AS400:OutputQueueEvent` FACET outputQueueLibrary, outputQueueName TIMESERIES LIMIT 10" }
+              { "accountId": 0, "query": "SELECT average(numberOfFiles) FROM `AS400:OutputQueueEvent` FACET outputQueueLibrary, outputQueueName TIMESERIES LIMIT 10" }
             ]
           }
         }
@@ -333,7 +333,7 @@
           "visualization": { "id": "viz.table" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT latest(temporaryStorageMB) AS 'Temp Storage (MB)', latest(jobType) AS 'Type', latest(jobStatus) AS 'Status', latest(subsystem) AS 'Subsystem', latest(authorizationName) AS 'User' FROM `AS400:JobTempStorageEvent` FACET jobName LIMIT 25" }
+              { "accountId": 0, "query": "SELECT latest(temporaryStorageMB) AS 'Temp Storage (MB)', latest(jobType) AS 'Type', latest(jobStatus) AS 'Status', latest(subsystem) AS 'Subsystem', latest(authorizationName) AS 'User' FROM `AS400:JobTempStorageEvent` FACET jobName LIMIT 25" }
             ]
           }
         },
@@ -343,7 +343,7 @@
           "visualization": { "id": "viz.table" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT latest(jobStatus) AS 'Status', latest(sqlStatementStatus) AS 'SQL Status', latest(elapsedTimeSeconds) AS 'Elapsed (s)', latest(databaseLockWaitTimeMs) AS 'DB Lock Wait (ms)', latest(nonDatabaseLockWaitTimeMs) AS 'Non-DB Lock Wait (ms)', latest(sqlStatementText) AS 'SQL Text' FROM `AS400:LongRunningSqlEvent` FACET jobName LIMIT 25" }
+              { "accountId": 0, "query": "SELECT latest(jobStatus) AS 'Status', latest(sqlStatementStatus) AS 'SQL Status', latest(elapsedTimeSeconds) AS 'Elapsed (s)', latest(databaseLockWaitTimeMs) AS 'DB Lock Wait (ms)', latest(nonDatabaseLockWaitTimeMs) AS 'Non-DB Lock Wait (ms)', latest(sqlStatementText) AS 'SQL Text' FROM `AS400:LongRunningSqlEvent` FACET jobName LIMIT 25" }
             ]
           }
         },
@@ -353,7 +353,7 @@
           "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT max(temporaryStorageMB) AS 'Max Temp Storage (MB)' FROM `AS400:JobTempStorageEvent`" }
+              { "accountId": 0, "query": "SELECT max(temporaryStorageMB) AS 'Max Temp Storage (MB)' FROM `AS400:JobTempStorageEvent`" }
             ]
           }
         },
@@ -363,7 +363,7 @@
           "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT uniqueCount(jobName) AS 'Jobs Flagged' FROM `AS400:LongRunningSqlEvent`" }
+              { "accountId": 0, "query": "SELECT uniqueCount(jobName) AS 'Jobs Flagged' FROM `AS400:LongRunningSqlEvent`" }
             ]
           }
         },
@@ -373,7 +373,7 @@
           "visualization": { "id": "viz.line" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT max(temporaryStorageMB) AS 'Max Temp Storage (MB)' FROM `AS400:JobTempStorageEvent` TIMESERIES" }
+              { "accountId": 0, "query": "SELECT max(temporaryStorageMB) AS 'Max Temp Storage (MB)' FROM `AS400:JobTempStorageEvent` TIMESERIES" }
             ]
           }
         }
@@ -389,7 +389,7 @@
           "visualization": { "id": "viz.table" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT message, severity, job, user, type FROM `AS400:MessageQueueEvent` LIMIT 100" }
+              { "accountId": 0, "query": "SELECT message, severity, job, user, type FROM `AS400:MessageQueueEvent` LIMIT 100" }
             ]
           }
         },
@@ -399,7 +399,7 @@
           "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT max(severity) AS 'Max Severity' FROM `AS400:MessageQueueEvent`" }
+              { "accountId": 0, "query": "SELECT max(severity) AS 'Max Severity' FROM `AS400:MessageQueueEvent`" }
             ]
           }
         },
@@ -409,7 +409,7 @@
           "visualization": { "id": "viz.bar" },
           "rawConfiguration": {
             "nrqlQueries": [
-              { "accountId": 7190450, "query": "SELECT count(*) FROM `AS400:MessageQueueEvent` FACET severity LIMIT 20" }
+              { "accountId": 0, "query": "SELECT count(*) FROM `AS400:MessageQueueEvent` FACET severity LIMIT 20" }
             ]
           }
         }

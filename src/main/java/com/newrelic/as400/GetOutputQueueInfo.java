@@ -52,6 +52,9 @@ public class GetOutputQueueInfo {
 
                 jsonMetrics.append("{")
                         .append("\"event_type\":\"AS400:OutputQueueEvent\",")
+                        .append("\"systemName\":\"").append(systemName).append("\",")
+                        .append("\"hostName\":\"").append(CommonUtil.getHostName(as400)).append("\",")
+                        .append("\"includeInIseriesEntity\":true,")
                         .append("\"outputQueueName\":\"").append(outputQueueName == null ? "" : outputQueueName.trim()).append("\",")
                         .append("\"outputQueueLibrary\":\"").append(outputQueueLibrary == null ? "" : outputQueueLibrary.trim()).append("\",")
                         .append("\"outputQueueStatus\":\"").append(outputQueueStatus == null ? "" : outputQueueStatus.trim()).append("\",")
@@ -67,14 +70,11 @@ public class GetOutputQueueInfo {
 
             response.append("{")
                     .append("\"name\":\"com.newrelic.as400-output-queue-info\",")
-                    .append("\"protocol_version\":\"3\",")
+                    .append("\"protocol_version\":\"1\",")
                     .append(Version)
-                    .append("\"data\":[{")
-                    .append("\"entity\":{\"name\":\"").append(systemName).append("\",\"type\":\"as400-system\"},")
                     .append("\"metrics\":").append(jsonMetrics.toString()).append(",")
                     .append("\"inventory\":{},")
                     .append("\"events\":[]")
-                    .append("}]")
                     .append("}");
 
             returnValue = Constants.OK;

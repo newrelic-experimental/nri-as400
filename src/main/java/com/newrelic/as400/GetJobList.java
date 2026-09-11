@@ -39,6 +39,7 @@ import com.ibm.as400.access.SystemStatus;
 import com.ibm.as400.access.AS400SecurityException;
 import com.ibm.as400.access.ErrorCompletingRequestException;
 import com.ibm.as400.access.ObjectDoesNotExistException;
+import com.newrelic.labs.utils.CommonUtil;
 
 public class GetJobList {
 	private static String s_systemName;
@@ -52,7 +53,7 @@ public class GetJobList {
 	// Json descriptor fields
 	private static String s_strNrName = "com.newrelic.as400-job-list";
 	private static String s_strNrIntVersion = "0.2.0";
-	private static String s_strNrProtoVersion = "3";
+	private static String s_strNrProtoVersion = "1";
 
 	
 	// JOBI0200 Format fields
@@ -158,6 +159,11 @@ public class GetJobList {
 						s_strNrName +
 						'"' +
 						"," +
+						"\"host\":" +
+						'"' +
+						strAs400 +
+						'"' +
+						"," +
 						"\"protocol_version\":" +
 						'"' +
 						s_strNrProtoVersion +
@@ -168,23 +174,9 @@ public class GetJobList {
 						s_strNrIntVersion +
 						'"' +
 						"," +
-						"\"data\":" +
-						"[{" +
-						"\"entity\":" +
-						"{" +
-						"\"name\":" +
-						'"' +
-						s_systemName +
-						'"' +
-						"," +
-						"\"type\":" +
-						'"' +
-						"as400-system" +
-						'"' +
-						"}," +
 						"\"metrics\":" +
 						"[");
-			String strJSONFooter = ("]," + "\"inventory\":" + "{" + "}," + "\"events\":" + "[" + "]" + "}" + "]" + "}");
+			String strJSONFooter = ("]," + "\"inventory\":" + "{" + "}," + "\"events\":" + "[" + "]" + "}");
 			System.err.println("JobList: " + jobList.getLength());
 			
 			while (listOfJobs.hasMoreElements()) {
@@ -311,8 +303,8 @@ public class GetJobList {
         		}
             }
             
-    		return getJsonText();				
-		} 
+    		return getJsonText(as400);
+		}
 		catch (Exception e) 
 		{
 			System.err.println("Exception: " + e.getMessage());
@@ -480,8 +472,8 @@ public class GetJobList {
         s_jobCPUPct = (float)anInteger.intValue() / 100;
 	}
 	
-	private static String getJsonText() {
-		
+	private static String getJsonText(AS400 as400) {
+
 		String strJSONMetrics =
 				"{" +
 					"\"event_type\":" +
@@ -493,6 +485,14 @@ public class GetJobList {
 					'"' +
 					"AS400 Job List Event" +
 					'"' +
+					"," +
+					"\"hostName\":" +
+					'"' +
+					CommonUtil.getHostName(as400) +
+					'"' +
+					"," +
+					"\"includeInIseriesEntity\":" +
+					true +
 					"," +
 					"\"systemName\":" +
 					'"' +

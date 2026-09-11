@@ -1,7 +1,6 @@
 package com.newrelic.as400;
 
 import com.ibm.as400.access.AS400;
-import com.ibm.as400.access.SystemStatus;
 import com.newrelic.labs.utils.JDBCConnection;
 import com.newrelic.labs.utils.Constants;
 import com.newrelic.labs.utils.CommonUtil;
@@ -48,7 +47,6 @@ public class GetDiskUsage {
 
         Connection connection = null;
         try {
-            String systemName = new SystemStatus(as400).getSystemName().trim();
             JDBCConnection JDBCConn = new JDBCConnection();
             connection = JDBCConn.getJDBCConnection(as400.getSystemName(), args.get("-U"), args.get("-P"), args.get("-SSL"));
             if (connection == null) {
@@ -87,6 +85,8 @@ public class GetDiskUsage {
 
                     jsonMetrics.append("{")
                             .append("\"event_type\":\"AS400:DiskUsageEvent\",")
+                            .append("\"hostName\":\"").append(CommonUtil.getHostName(as400)).append("\",")
+                            .append("\"includeInIseriesEntity\":true,")
                             .append("\"aspNumber\":\"").append(aspNumber).append("\",")
                             .append("\"unitNumber\":\"").append(unitNumber).append("\",")
                             .append("\"unitType\":\"").append(unitType).append("\",")
@@ -111,14 +111,11 @@ public class GetDiskUsage {
 
             response.append("{")
                     .append("\"name\":\"com.newrelic.as400-disk-usage\",")
-                    .append("\"protocol_version\":\"3\",")
+                    .append("\"protocol_version\":\"1\",")
                     .append(Version)
-                    .append("\"data\":[{")
-                    .append("\"entity\":{\"name\":\"").append(systemName).append("\",\"type\":\"as400-system\"},")
                     .append("\"metrics\":").append(jsonMetrics.toString()).append(",")
                     .append("\"inventory\":{},")
                     .append("\"events\":[]")
-                    .append("}]")
                     .append("}");
 
            // System.out.println("Count: " + count);

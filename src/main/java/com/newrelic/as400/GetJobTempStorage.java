@@ -61,6 +61,9 @@ public class GetJobTempStorage {
 
                 jsonMetrics.append("{")
                         .append("\"event_type\":\"AS400:JobTempStorageEvent\",")
+                        .append("\"systemName\":\"").append(systemName).append("\",")
+                        .append("\"hostName\":\"").append(CommonUtil.getHostName(as400)).append("\",")
+                        .append("\"includeInIseriesEntity\":true,")
                         .append("\"jobName\":\"").append(jobName == null ? "" : jobName.trim()).append("\",")
                         .append("\"jobType\":\"").append(jobType == null ? "" : jobType.trim()).append("\",")
                         .append("\"jobStatus\":\"").append(jobStatus == null ? "" : jobStatus.trim()).append("\",")
@@ -82,14 +85,11 @@ public class GetJobTempStorage {
 
             response.append("{")
                     .append("\"name\":\"com.newrelic.as400-job-temp-storage\",")
-                    .append("\"protocol_version\":\"3\",")
+                    .append("\"protocol_version\":\"1\",")
                     .append(Version)
-                    .append("\"data\":[{")
-                    .append("\"entity\":{\"name\":\"").append(systemName).append("\",\"type\":\"as400-system\"},")
                     .append("\"metrics\":").append(jsonMetrics.toString()).append(",")
                     .append("\"inventory\":{},")
                     .append("\"events\":[]")
-                    .append("}]")
                     .append("}");
 
             returnValue = Constants.OK;

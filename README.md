@@ -88,6 +88,8 @@ This will allow you to test the configuration and ensure that the credentials an
 
 Each section below details the possible settings for an instance of that OHI. All of these settings should be in the `instances:` stanza of `nri-as400-config.yml`.
 
+All 9 commands also accept an optional `hostname_override` argument (`HOSTNAME_OVERRIDE` env var). Every event includes a `hostName` attribute used to enrich the New Relic `IBM_ISERIES` entity for that system; by default it's the `as400host` value, but `hostname_override` lets you report a different identifier (e.g. a friendly name) instead of the raw connection string.
+
 ### as400-job-list - iSeries Active Jobs <a id="config-as400-job-list"></a>
 ```yaml
 instances:
@@ -316,6 +318,9 @@ Event Type: `AS400:JobList`
 Attributes:
 - `event_type` - Required for all OHI events.
 - `summary` - Summary of the event. Optional for OHI events.
+- `systemName` - iSeries name.
+- `hostName` - The identifier reported for `IBM_ISERIES` entity enrichment; the `as400host` value, or `hostname_override` if set.
+- `includeInIseriesEntity` - Always `true`; signals this event should be used to enrich the `IBM_ISERIES` entity for `hostName`.
 - `jobQueue` - The job queue that the job was submitted to.
 - `jobName` - The executing job name.
 - `jobUser` - The user which submitted the job.
@@ -331,6 +336,8 @@ Event Type: `AS400:MemoryStatusEvent`
 Attributes:
 - `event_type` - Required for all OHI events.
 - `eventInstanceId` - A unique ID correlating the variaous storage pools metrics captured together.
+- `hostName` - The identifier reported for `IBM_ISERIES` entity enrichment; the `as400host` value, or `hostname_override` if set.
+- `includeInIseriesEntity` - Always `true`; signals this event should be used to enrich the `IBM_ISERIES` entity for `hostName`.
 - `systemName` - iSeries name.
 - `dateTimeStatusGathered` - Date / Time of collection.
 - `mainStorageSize` - The amount of main storage, in kilobytes, in the system..
@@ -364,6 +371,8 @@ Attributes:
 - `event_type` - Required for all OHI events.
 - `summary` - Summary of the event. Optional for OHI events.
 - `host` - The iSeries host that the message queue resides on.
+- `hostName` - The identifier reported for `IBM_ISERIES` entity enrichment; the `as400host` value, or `hostname_override` if set.
+- `includeInIseriesEntity` - Always `true`; signals this event should be used to enrich the `IBM_ISERIES` entity for `hostName`.
 - `queue` - The iSeries message queue being polled.
 - `messageID` - The 4 byte message unique message identifier.
 - `job` - The name of the job which produced the message.
@@ -381,6 +390,8 @@ Event Type: `AS400:SystemStatusEvent`
 
 Attributes:
 - `event_type` - Required for all OHI events.
+- `hostName` - The identifier reported for `IBM_ISERIES` entity enrichment; the `as400host` value, or `hostname_override` if set.
+- `includeInIseriesEntity` - Always `true`; signals this event should be used to enrich the `IBM_ISERIES` entity for `hostName`.
 - `numberActiveJobsInSystem` - Number of jobs in the system that are currently active and running.
 - `activeThreadsInSystem` - Number of active threads in the system.
 - `batchJobsEndedWithPrinterOutputWaitingToPrint` - Number of jobs that have ended, but are currently waiting for output to spool to a printer.
@@ -425,6 +436,8 @@ Event Type: `AS400:DiskUsageEvent`
 
 Attributes:
 - `event_type` - Required for all OHI events.
+- `hostName` - The identifier reported for `IBM_ISERIES` entity enrichment; the `as400host` value, or `hostname_override` if set.
+- `includeInIseriesEntity` - Always `true`; signals this event should be used to enrich the `IBM_ISERIES` entity for `hostName`.
 - `aspNumber` - The storage pool (ASP) number.
 - `unitNumber` - The unit number of the disk.
 - `unitType` - The type of disk unit.
@@ -444,6 +457,9 @@ Event Type: `AS400:JobQueueEvent`
 
 Attributes:
 - `event_type` - Required for all OHI events.
+- `systemName` - iSeries name.
+- `hostName` - The identifier reported for `IBM_ISERIES` entity enrichment; the `as400host` value, or `hostname_override` if set.
+- `includeInIseriesEntity` - Always `true`; signals this event should be used to enrich the `IBM_ISERIES` entity for `hostName`.
 - `jobQueueName` - The name of the job queue.
 - `jobQueueLibrary` - The name of the library that contains the job queue.
 - `jobQueueStatus` - The status of the job queue: `HELD` or `RELEASED`.
@@ -461,6 +477,9 @@ Event Type: `AS400:OutputQueueEvent`
 
 Attributes:
 - `event_type` - Required for all OHI events.
+- `systemName` - iSeries name.
+- `hostName` - The identifier reported for `IBM_ISERIES` entity enrichment; the `as400host` value, or `hostname_override` if set.
+- `includeInIseriesEntity` - Always `true`; signals this event should be used to enrich the `IBM_ISERIES` entity for `hostName`.
 - `outputQueueName` - The name of the output queue.
 - `outputQueueLibrary` - The name of the library that contains the output queue.
 - `outputQueueStatus` - The status of the output queue: `HELD` or `RELEASED`.
@@ -471,6 +490,9 @@ Event Type: `AS400:JobTempStorageEvent`
 
 Attributes:
 - `event_type` - Required for all OHI events.
+- `systemName` - iSeries name.
+- `hostName` - The identifier reported for `IBM_ISERIES` entity enrichment; the `as400host` value, or `hostname_override` if set.
+- `includeInIseriesEntity` - Always `true`; signals this event should be used to enrich the `IBM_ISERIES` entity for `hostName`.
 - `jobName` - The qualified job name, in `number/user/name` format.
 - `jobType` - The type of the active job (e.g. `BCH`, `INT`, `PJ`).
 - `jobStatus` - The status of the job's initial thread (e.g. `RUN`, `MSGW`, `LCKW`).
@@ -487,15 +509,19 @@ Event Type: `AS400:LongRunningSqlEvent`
 
 Attributes:
 - `event_type` - Required for all OHI events.
+- `systemName` - iSeries name.
+- `hostName` - The identifier reported for `IBM_ISERIES` entity enrichment; the `as400host` value, or `hostname_override` if set.
+- `includeInIseriesEntity` - Always `true`; signals this event should be used to enrich the `IBM_ISERIES` entity for `hostName`.
 - `jobName` - The qualified job name, in `number/user/name` format.
 - `jobStatus` - The status of the job's initial thread. A value other than `RUN` (`LCKW`, `MTXW`, `SEMW`, `LSPW`, or `MSGW`) indicates the job is blocked/waiting on a contended resource.
 - `subsystem` - The subsystem the job is running in.
-- `elapsedTimeSeconds` - The time elapsed since the measurement interval began, in seconds.
+- `elapsedTimeSeconds` - Time since this job's statistics were last explicitly reset, in seconds; this integration never resets them, so it reads 0 for the (typical) job that's never had a reset. It does **not** indicate how long a job has been blocked — use `lockWaitTimeMs` for that.
 - `sqlStatementText` - The text of the currently-running (or last-run) SQL statement in the job.
 - `sqlStatementStatus` - `ACTIVE` if an SQL statement is currently running, `COMPLETE` if the last one has finished.
 - `sqlStatementStartTimestamp` - The execution start time of the active SQL statement, if any.
 - `databaseLockWaitTimeMs` - Cumulative time, in milliseconds, the job's initial thread has waited on database locks.
 - `nonDatabaseLockWaitTimeMs` - Cumulative time, in milliseconds, the job's initial thread has waited on non-database locks.
+- `lockWaitTimeMs` - `max(databaseLockWaitTimeMs, nonDatabaseLockWaitTimeMs)` - the clearest available signal for how long a blocked job (`LCKW`/`MTXW`/`SEMW`/`LSPW`/`MSGW`) has been stuck.
 
 
 ## Dashboard
@@ -505,10 +531,9 @@ A ready-to-import New Relic dashboard covering all 9 event types is provided at 
 To import it:
 1. In New Relic, go to **Dashboards** and click **Import dashboard**.
 2. Paste the contents of `dashboards/nri-as400-dashboard.json`.
-3. Every NRQL query in the file has a placeholder `"accountId": 0` — either let the import UI remap it to the account you're importing into, or find-and-replace `"accountId": 0` with your actual New Relic account ID before pasting.
+3. Every NRQL query in the file has a placeholder `"accountId": 0`. The import screen does **not** fill this in for you — find-and-replace `"accountId": 0` with your actual New Relic account ID before pasting.
 
 #### Notes
-* `AS400:JobQueueEvent`, `AS400:OutputQueueEvent`, `AS400:JobTempStorageEvent`, and `AS400:LongRunningSqlEvent` don't currently carry a `systemName` attribute (unlike the other five event types), so if you monitor more than one AS/400 system with a single agent, those four pages' widgets will aggregate across all of them rather than splitting by system.
 * A few "current total" billboards (e.g. total active jobs across job queues, total spooled files) use a nested NRQL subquery (`SELECT sum(v) FROM (SELECT latest(v) ... FACET ...)`) to avoid double-counting from repeated polling — a plain `sum()`/`count()` over the raw event stream would multiply by however many collection intervals fall in the selected time window.
 
 
