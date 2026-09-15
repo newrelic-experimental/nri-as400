@@ -13,6 +13,7 @@ package com.newrelic.as400;
 import java.io.*;
 import java.util.*;
 import com.ibm.as400.access.*;
+import com.newrelic.labs.utils.CommonUtil;
 
 public class GetSystemStatus {
 	
@@ -169,7 +170,7 @@ public class GetSystemStatus {
             	getFormat0300_Data(as400, as400Data);
             }
 
-            String strJson = getJsonText();
+            String strJson = getJsonText(as400);
             System.out.println(strJson);
             
             // This program is done running program so disconnect from
@@ -472,7 +473,7 @@ public class GetSystemStatus {
 
 	}
 	
-	private static String getJsonText()  {
+	private static String getJsonText(AS400 as400)  {
 		String strNrName = "com.newrelic.as400-system-status";
 		String strNrEventType = "AS400:SystemStatusEvent";
 		String strNrProtoVersion = "1";
@@ -487,6 +488,14 @@ public class GetSystemStatus {
 					'"' +
 					strNrEventType +
 					'"' +
+					"," +
+					"\"hostName\":" +
+					'"' +
+					CommonUtil.getHostName(as400) +
+					'"' +
+					"," +
+					"\"includeInIseriesEntity\":" +
+					true +
 					"," +
 					"\"numberActiveJobsInSystem\":" +
 					s_numberActiveJobsInSystem +

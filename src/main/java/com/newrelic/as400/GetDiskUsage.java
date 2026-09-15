@@ -85,6 +85,8 @@ public class GetDiskUsage {
 
                     jsonMetrics.append("{")
                             .append("\"event_type\":\"AS400:DiskUsageEvent\",")
+                            .append("\"hostName\":\"").append(CommonUtil.getHostName(as400)).append("\",")
+                            .append("\"includeInIseriesEntity\":true,")
                             .append("\"aspNumber\":\"").append(aspNumber).append("\",")
                             .append("\"unitNumber\":\"").append(unitNumber).append("\",")
                             .append("\"unitType\":\"").append(unitType).append("\",")

@@ -39,6 +39,7 @@ import com.ibm.as400.access.SystemStatus;
 import com.ibm.as400.access.AS400SecurityException;
 import com.ibm.as400.access.ErrorCompletingRequestException;
 import com.ibm.as400.access.ObjectDoesNotExistException;
+import com.newrelic.labs.utils.CommonUtil;
 
 public class GetJobList {
 	private static String s_systemName;
@@ -302,8 +303,8 @@ public class GetJobList {
         		}
             }
             
-    		return getJsonText();				
-		} 
+    		return getJsonText(as400);
+		}
 		catch (Exception e) 
 		{
 			System.err.println("Exception: " + e.getMessage());
@@ -471,8 +472,8 @@ public class GetJobList {
         s_jobCPUPct = (float)anInteger.intValue() / 100;
 	}
 	
-	private static String getJsonText() {
-		
+	private static String getJsonText(AS400 as400) {
+
 		String strJSONMetrics =
 				"{" +
 					"\"event_type\":" +
@@ -484,6 +485,14 @@ public class GetJobList {
 					'"' +
 					"AS400 Job List Event" +
 					'"' +
+					"," +
+					"\"hostName\":" +
+					'"' +
+					CommonUtil.getHostName(as400) +
+					'"' +
+					"," +
+					"\"includeInIseriesEntity\":" +
+					true +
 					"," +
 					"\"systemName\":" +
 					'"' +

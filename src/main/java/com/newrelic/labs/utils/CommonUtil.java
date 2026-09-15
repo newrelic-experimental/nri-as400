@@ -1,6 +1,13 @@
 package com.newrelic.labs.utils;
 
+import com.ibm.as400.access.AS400;
+
 public class CommonUtil {
+    public static String getHostName(AS400 as400) {
+        String override = System.getenv("HOSTNAME_OVERRIDE");
+        return (override != null && !override.isEmpty()) ? override : as400.getSystemName();
+    }
+
     public static int getStatus(double value, double warningThreshold, double criticalThreshold, int currentStatus) {
         if (value >= criticalThreshold) {
             return Constants.CRITICAL;

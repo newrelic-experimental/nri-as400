@@ -1,6 +1,6 @@
 name: com.newrelic.as400
 protocol_version: 1
-description: Monitors iSeries (AS400) - jobs, message queues, system status, memory status, and disk usage
+description: Monitors iSeries (AS400) - jobs, message queues, system status, memory status, disk usage, job queues, output queues, job temp storage, and long-running SQL
 commands:
   job-list:
     command:
@@ -41,4 +41,36 @@ commands:
       - ./bin/nri-as400.jar
       - -Dcom.ibm.as400.access.AS400.guiAvailable=false
       - com.newrelic.as400.GetDiskUsage
+    interval: 60
+  job-queue-info:
+    command:
+      - /usr/bin/java
+      - -cp
+      - ./bin/nri-as400.jar
+      - -Dcom.ibm.as400.access.AS400.guiAvailable=false
+      - com.newrelic.as400.GetJobQueueInfo
+    interval: 60
+  output-queue-info:
+    command:
+      - /usr/bin/java
+      - -cp
+      - ./bin/nri-as400.jar
+      - -Dcom.ibm.as400.access.AS400.guiAvailable=false
+      - com.newrelic.as400.GetOutputQueueInfo
+    interval: 60
+  job-temp-storage:
+    command:
+      - /usr/bin/java
+      - -cp
+      - ./bin/nri-as400.jar
+      - -Dcom.ibm.as400.access.AS400.guiAvailable=false
+      - com.newrelic.as400.GetJobTempStorage
+    interval: 60
+  long-running-sql:
+    command:
+      - /usr/bin/java
+      - -cp
+      - ./bin/nri-as400.jar
+      - -Dcom.ibm.as400.access.AS400.guiAvailable=false
+      - com.newrelic.as400.GetLongRunningSqlInfo
     interval: 60

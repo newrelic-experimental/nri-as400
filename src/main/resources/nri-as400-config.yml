@@ -44,3 +44,35 @@ instances:
       passwd: user0465
     labels:
       env: production
+  - name: pub400_job_queue
+    command: job-queue-info
+    arguments:
+      as400host: pub400.com
+      userid: USER0465
+      passwd: user0465
+    labels:
+      env: production
+  - name: pub400_output_queue
+    command: output-queue-info
+    arguments:
+      as400host: pub400.com
+      userid: USER0465
+      passwd: user0465
+    labels:
+      env: production
+  - name: pub400_job_temp_storage
+    command: job-temp-storage
+    arguments:
+      as400host: pub400.com
+      userid: USER0465
+      passwd: user0465
+    labels:
+      env: production
+  - name: pub400_long_running_sql
+    command: long-running-sql
+    arguments:
+      as400host: pub400.com
+      userid: USER0465
+      passwd: user0465
+    labels:
+      env: production

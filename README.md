@@ -17,7 +17,7 @@
 
 # New Relic integration for AS/400
 
-iSeries / AS400 monitoring solution for New Relic Infrastructure. Actually split into 5 separate OHIs, all described below.
+iSeries / AS400 monitoring solution for New Relic Infrastructure. Actually split into 9 separate OHIs, all described below.
 
 ## Prerequisites
 
@@ -34,6 +34,10 @@ iSeries / AS400 monitoring solution for New Relic Infrastructure. Actually split
   - [as400-message-queue - iSeries Message Queues](#config-as400-message-queue)
   - [as400-system-status - iSeries Server KPIs](#config-as400-system-status)
   - [as400-disk-usage - iSeries Disk Usage](#config-as400-disk-usage)
+  - [as400-job-queue-info - iSeries Job Queue Info](#config-as400-job-queue-info)
+  - [as400-output-queue-info - iSeries Output Queue Info](#config-as400-output-queue-info)
+  - [as400-job-temp-storage - iSeries Job Temporary Storage](#config-as400-job-temp-storage)
+  - [as400-long-running-sql - iSeries Long-Running SQL / Blocked Jobs](#config-as400-long-running-sql)
 - run `nri-as400/install_linux.sh`
 
 ### Configuring the OHIs
@@ -53,6 +57,18 @@ Configuration for monitoring iSeries server KPIs.
 #### as400-disk-usage
 Configuration for monitoring iSeries disk usage.
 
+#### as400-job-queue-info
+Configuration for monitoring iSeries job queue depth and status.
+
+#### as400-output-queue-info
+Configuration for monitoring iSeries output queue (spooled file) backlog.
+
+#### as400-job-temp-storage
+Configuration for monitoring the top active jobs by temporary storage consumption.
+
+#### as400-long-running-sql
+Configuration for monitoring long-running SQL statements and blocked/contended jobs.
+
 ### Testing with `nri-as400-test.sh` <a id="testing-with-nri-as400-testsh"></a>
 This collection of OHIs comes with `nri-as400-test.sh`, a shell script to verify:
 * connectivity to AS400 host
@@ -64,13 +80,15 @@ This collection of OHIs comes with `nri-as400-test.sh`, a shell script to verify
 To use `nri-as400-test.sh`:
 1. Edit `nri-as400-test.sh`, setting the environment variables at the top to the settings you will use in this configuration.
 2. If not executable, run `chmod +x nri-as400-test.sh`
-3. Run `./nri-as400-test.sh [job-list|memory-status|message-queue|system-status|disk-usage]`
+3. Run `./nri-as400-test.sh [job-list|memory-status|message-queue|system-status|disk-usage|job-queue-info|output-queue-info|job-temp-storage|long-running-sql]`
 
-This will allow you to test the configuration and ensure that the credentials and parameters are correct for each of the supported commands, including the new `disk-usage` command.
+This will allow you to test the configuration and ensure that the credentials and parameters are correct for each of the supported commands, including the `job-temp-storage` and `long-running-sql` commands.
 
 ## Configuration
 
 Each section below details the possible settings for an instance of that OHI. All of these settings should be in the `instances:` stanza of `nri-as400-config.yml`.
+
+All 9 commands also accept an optional `hostname_override` argument (`HOSTNAME_OVERRIDE` env var). Every event includes a `hostName` attribute used to enrich the New Relic `IBM_ISERIES` entity for that system; by default it's the `as400host` value, but `hostname_override` lets you report a different identifier (e.g. a friendly name) instead of the raw connection string.
 
 ### as400-job-list - iSeries Active Jobs <a id="config-as400-job-list"></a>
 ```yaml
@@ -190,6 +208,107 @@ instances:
 * This OHI can be configured to pull disk usage statistics from multiple iSeries servers.
 * Execution interval should be fine at 30 to 60 seconds.
 
+### as400-job-queue-info - iSeries Job Queue Info <a id="config-as400-job-queue-info"></a>
+
+```yaml
+instances:
+  - name: pub400_job_queue
+    command: job-queue-info
+    arguments:
+      as400host: pub400.com
+      userid: USER0465
+      passwd: user0465
+    labels:
+      env: production
+```
+
+* `name`: The name of the instance, usually the host and "_job_queue".
+* `as400host`: The iSeries host.
+* `userid`: The user that has access to the job queue statistics.
+* `passwd`: The password for the user.
+* `env`: You may specify the enviroment.
+
+#### Notes
+* This OHI can be configured to pull job queue statistics from multiple iSeries servers.
+* One event is emitted per job queue on the system, via the `QSYS2.JOB_QUEUE_INFO` SQL Service.
+* Execution interval should be fine at 30 to 60 seconds.
+
+### as400-output-queue-info - iSeries Output Queue Info <a id="config-as400-output-queue-info"></a>
+
+```yaml
+instances:
+  - name: pub400_output_queue
+    command: output-queue-info
+    arguments:
+      as400host: pub400.com
+      userid: USER0465
+      passwd: user0465
+    labels:
+      env: production
+```
+
+* `name`: The name of the instance, usually the host and "_output_queue".
+* `as400host`: The iSeries host.
+* `userid`: The user that has access to the output queue statistics.
+* `passwd`: The password for the user.
+* `env`: You may specify the enviroment.
+
+#### Notes
+* This OHI can be configured to pull output queue (spooled file) statistics from multiple iSeries servers.
+* One event is emitted per output queue on the system, via the `QSYS2.OUTPUT_QUEUE_INFO` SQL Service.
+* Execution interval should be fine at 30 to 60 seconds.
+
+### as400-job-temp-storage - iSeries Job Temporary Storage <a id="config-as400-job-temp-storage"></a>
+
+```yaml
+instances:
+  - name: pub400_job_temp_storage
+    command: job-temp-storage
+    arguments:
+      as400host: pub400.com
+      userid: USER0465
+      passwd: user0465
+    labels:
+      env: production
+```
+
+* `name`: The name of the instance, usually the host and "_job_temp_storage".
+* `as400host`: The iSeries host.
+* `userid`: The user that has access to active job information.
+* `passwd`: The password for the user.
+* `env`: You may specify the enviroment.
+
+#### Notes
+* This OHI can be configured to pull job temporary storage statistics from multiple iSeries servers.
+* One event is emitted per job, limited to the top 25 active (non-system) jobs by temporary storage consumption, via the `QSYS2.ACTIVE_JOB_INFO` SQL Service table function.
+* Execution interval should be fine at 30 to 60 seconds.
+
+### as400-long-running-sql - iSeries Long-Running SQL / Blocked Jobs <a id="config-as400-long-running-sql"></a>
+
+```yaml
+instances:
+  - name: pub400_long_running_sql
+    command: long-running-sql
+    arguments:
+      as400host: pub400.com
+      userid: USER0465
+      passwd: user0465
+    labels:
+      env: production
+```
+
+* `name`: The name of the instance, usually the host and "_long_running_sql".
+* `as400host`: The iSeries host.
+* `userid`: The user that has access to active job information.
+* `passwd`: The password for the user.
+* `env`: You may specify the enviroment.
+
+#### Notes
+* This OHI can be configured to pull long-running SQL / blocked job statistics from multiple iSeries servers.
+* One event is emitted per job that either currently has an active SQL statement running, or is genuinely blocked waiting on a contended resource (lock wait, mutex wait, semaphore wait, lock-space wait, or message wait), limited to the top 25 by elapsed time, via the `QSYS2.ACTIVE_JOB_INFO` SQL Service table function with `DETAILED_INFO => 'FULL'`.
+* Idle listener/prestart jobs (e.g. `QSQSRVR`, `QP0ZSPWT`, subsystem monitors) normally sit in a dequeue or condition wait between requests — that is excluded by design, since it is not indicative of a problem.
+* This command retrieves more detail per job (including current SQL statement text) than the other OHIs, and so is a heavier query. [Test using `nri-as400-test.sh long-running-sql`](#testing-with-nri-as400-testsh) and note the time it takes to complete. If longer than 60 seconds, increase the `interval` in `nri-as400-definition.yml` to be at least as long as that time.
+
 
 ## Data Types
 
@@ -199,6 +318,9 @@ Event Type: `AS400:JobList`
 Attributes:
 - `event_type` - Required for all OHI events.
 - `summary` - Summary of the event. Optional for OHI events.
+- `systemName` - iSeries name.
+- `hostName` - The identifier reported for `IBM_ISERIES` entity enrichment; the `as400host` value, or `hostname_override` if set.
+- `includeInIseriesEntity` - Always `true`; signals this event should be used to enrich the `IBM_ISERIES` entity for `hostName`.
 - `jobQueue` - The job queue that the job was submitted to.
 - `jobName` - The executing job name.
 - `jobUser` - The user which submitted the job.
@@ -214,6 +336,8 @@ Event Type: `AS400:MemoryStatusEvent`
 Attributes:
 - `event_type` - Required for all OHI events.
 - `eventInstanceId` - A unique ID correlating the variaous storage pools metrics captured together.
+- `hostName` - The identifier reported for `IBM_ISERIES` entity enrichment; the `as400host` value, or `hostname_override` if set.
+- `includeInIseriesEntity` - Always `true`; signals this event should be used to enrich the `IBM_ISERIES` entity for `hostName`.
 - `systemName` - iSeries name.
 - `dateTimeStatusGathered` - Date / Time of collection.
 - `mainStorageSize` - The amount of main storage, in kilobytes, in the system..
@@ -247,6 +371,8 @@ Attributes:
 - `event_type` - Required for all OHI events.
 - `summary` - Summary of the event. Optional for OHI events.
 - `host` - The iSeries host that the message queue resides on.
+- `hostName` - The identifier reported for `IBM_ISERIES` entity enrichment; the `as400host` value, or `hostname_override` if set.
+- `includeInIseriesEntity` - Always `true`; signals this event should be used to enrich the `IBM_ISERIES` entity for `hostName`.
 - `queue` - The iSeries message queue being polled.
 - `messageID` - The 4 byte message unique message identifier.
 - `job` - The name of the job which produced the message.
@@ -264,6 +390,8 @@ Event Type: `AS400:SystemStatusEvent`
 
 Attributes:
 - `event_type` - Required for all OHI events.
+- `hostName` - The identifier reported for `IBM_ISERIES` entity enrichment; the `as400host` value, or `hostname_override` if set.
+- `includeInIseriesEntity` - Always `true`; signals this event should be used to enrich the `IBM_ISERIES` entity for `hostName`.
 - `numberActiveJobsInSystem` - Number of jobs in the system that are currently active and running.
 - `activeThreadsInSystem` - Number of active threads in the system.
 - `batchJobsEndedWithPrinterOutputWaitingToPrint` - Number of jobs that have ended, but are currently waiting for output to spool to a printer.
@@ -308,6 +436,8 @@ Event Type: `AS400:DiskUsageEvent`
 
 Attributes:
 - `event_type` - Required for all OHI events.
+- `hostName` - The identifier reported for `IBM_ISERIES` entity enrichment; the `as400host` value, or `hostname_override` if set.
+- `includeInIseriesEntity` - Always `true`; signals this event should be used to enrich the `IBM_ISERIES` entity for `hostName`.
 - `aspNumber` - The storage pool (ASP) number.
 - `unitNumber` - The unit number of the disk.
 - `unitType` - The type of disk unit.
@@ -321,6 +451,90 @@ Attributes:
 - `capacityMB` - The storage capacity of the unit in megabytes.
 - `availableMB` - The available space on the unit in megabytes.
 - `percentUsed` - The percentage of the disk unit that has been consumed.
+
+### as400-job-queue-info
+Event Type: `AS400:JobQueueEvent`
+
+Attributes:
+- `event_type` - Required for all OHI events.
+- `systemName` - iSeries name.
+- `hostName` - The identifier reported for `IBM_ISERIES` entity enrichment; the `as400host` value, or `hostname_override` if set.
+- `includeInIseriesEntity` - Always `true`; signals this event should be used to enrich the `IBM_ISERIES` entity for `hostName`.
+- `jobQueueName` - The name of the job queue.
+- `jobQueueLibrary` - The name of the library that contains the job queue.
+- `jobQueueStatus` - The status of the job queue: `HELD` or `RELEASED`.
+- `subsystemName` - The name of the subsystem that can receive jobs from this job queue.
+- `subsystemLibraryName` - The library in which the subsystem description resides.
+- `maximumActiveJobs` - The maximum number of jobs that can be active at the same time through this job queue entry. `-1` indicates `*NOMAX`.
+- `activeJobs` - The current number of jobs that are active that came through this job queue entry.
+- `heldJobs` - The current number of jobs that are in `*HELD` status.
+- `releasedJobs` - The current number of jobs that are in `*RELEASED` status.
+- `scheduledJobs` - The current number of jobs that are in `*SCHEDULED` status.
+- `numberOfJobs` - The total number of jobs in the queue.
+
+### as400-output-queue-info
+Event Type: `AS400:OutputQueueEvent`
+
+Attributes:
+- `event_type` - Required for all OHI events.
+- `systemName` - iSeries name.
+- `hostName` - The identifier reported for `IBM_ISERIES` entity enrichment; the `as400host` value, or `hostname_override` if set.
+- `includeInIseriesEntity` - Always `true`; signals this event should be used to enrich the `IBM_ISERIES` entity for `hostName`.
+- `outputQueueName` - The name of the output queue.
+- `outputQueueLibrary` - The name of the library that contains the output queue.
+- `outputQueueStatus` - The status of the output queue: `HELD` or `RELEASED`.
+- `numberOfFiles` - The number of spooled files currently on the output queue.
+
+### as400-job-temp-storage
+Event Type: `AS400:JobTempStorageEvent`
+
+Attributes:
+- `event_type` - Required for all OHI events.
+- `systemName` - iSeries name.
+- `hostName` - The identifier reported for `IBM_ISERIES` entity enrichment; the `as400host` value, or `hostname_override` if set.
+- `includeInIseriesEntity` - Always `true`; signals this event should be used to enrich the `IBM_ISERIES` entity for `hostName`.
+- `jobName` - The qualified job name, in `number/user/name` format.
+- `jobType` - The type of the active job (e.g. `BCH`, `INT`, `PJ`).
+- `jobStatus` - The status of the job's initial thread (e.g. `RUN`, `MSGW`, `LCKW`).
+- `subsystem` - The subsystem the job is running in.
+- `authorizationName` - The user profile the initial thread is currently running under.
+- `runPriority` - The job's run priority (1 highest, 99 lowest).
+- `temporaryStorageMB` - The amount of temporary storage, in megabytes, currently allocated to the job.
+- `cpuTimeMs` - The total processing unit time used by the job, in milliseconds.
+- `elapsedTimeSeconds` - The time elapsed since the measurement interval began, in seconds.
+- `threadCount` - The number of active threads in the job.
+
+### as400-long-running-sql
+Event Type: `AS400:LongRunningSqlEvent`
+
+Attributes:
+- `event_type` - Required for all OHI events.
+- `systemName` - iSeries name.
+- `hostName` - The identifier reported for `IBM_ISERIES` entity enrichment; the `as400host` value, or `hostname_override` if set.
+- `includeInIseriesEntity` - Always `true`; signals this event should be used to enrich the `IBM_ISERIES` entity for `hostName`.
+- `jobName` - The qualified job name, in `number/user/name` format.
+- `jobStatus` - The status of the job's initial thread. A value other than `RUN` (`LCKW`, `MTXW`, `SEMW`, `LSPW`, or `MSGW`) indicates the job is blocked/waiting on a contended resource.
+- `subsystem` - The subsystem the job is running in.
+- `elapsedTimeSeconds` - Time since this job's statistics were last explicitly reset, in seconds; this integration never resets them, so it reads 0 for the (typical) job that's never had a reset. It does **not** indicate how long a job has been blocked — use `lockWaitTimeMs` for that.
+- `sqlStatementText` - The text of the currently-running (or last-run) SQL statement in the job.
+- `sqlStatementStatus` - `ACTIVE` if an SQL statement is currently running, `COMPLETE` if the last one has finished.
+- `sqlStatementStartTimestamp` - The execution start time of the active SQL statement, if any.
+- `databaseLockWaitTimeMs` - Cumulative time, in milliseconds, the job's initial thread has waited on database locks.
+- `nonDatabaseLockWaitTimeMs` - Cumulative time, in milliseconds, the job's initial thread has waited on non-database locks.
+- `lockWaitTimeMs` - `max(databaseLockWaitTimeMs, nonDatabaseLockWaitTimeMs)` - the clearest available signal for how long a blocked job (`LCKW`/`MTXW`/`SEMW`/`LSPW`/`MSGW`) has been stuck.
+
+
+## Dashboard
+
+A ready-to-import New Relic dashboard covering all 9 event types is provided at [`dashboards/nri-as400-dashboard.json`](dashboards/nri-as400-dashboard.json). It has 7 pages: System Overview, Memory & Storage Pools, Active Jobs, Disk Usage, Job Queues & Output Queues, Job Temp Storage & Long-Running SQL, and Message Queue.
+
+To import it:
+1. In New Relic, go to **Dashboards** and click **Import dashboard**.
+2. Paste the contents of `dashboards/nri-as400-dashboard.json`.
+3. Every NRQL query in the file has a placeholder `"accountId": 0`. The import screen does **not** fill this in for you — find-and-replace `"accountId": 0` with your actual New Relic account ID before pasting.
+
+#### Notes
+* A few "current total" billboards (e.g. total active jobs across job queues, total spooled files) use a nested NRQL subquery (`SELECT sum(v) FROM (SELECT latest(v) ... FACET ...)`) to avoid double-counting from repeated polling — a plain `sum()`/`count()` over the raw event stream would multiply by however many collection intervals fall in the selected time window.
 
 
 ## Support
