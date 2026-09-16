@@ -8,6 +8,18 @@ public class CommonUtil {
         return (override != null && !override.isEmpty()) ? override : as400.getSystemName();
     }
 
+    /**
+     * Reads the real build version from the jar's manifest (set by the shade
+     * plugin to match the pom.xml version), so it can't drift out of sync
+     * across releases the way a hardcoded string in each class would.
+     * Falls back to "unknown" when not running from a packaged jar
+     * (e.g. running directly from target/classes during development).
+     */
+    public static String getIntegrationVersion() {
+        String version = CommonUtil.class.getPackage().getImplementationVersion();
+        return (version != null && !version.isEmpty()) ? version : "unknown";
+    }
+
     public static int getStatus(double value, double warningThreshold, double criticalThreshold, int currentStatus) {
         if (value >= criticalThreshold) {
             return Constants.CRITICAL;

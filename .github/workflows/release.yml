@@ -1,0 +1,70 @@
+name: Build and Release (Manual Run)
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g. 1.3.0). This becomes the pom.xml version, the jar filename, and the release tag.'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+env:
+  GH_TOKEN: ${{ secrets.OPENSOURCE_BOT_TOKEN }}
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Runtime target for this integration is JDK 8 (some customers still run it
+      # there), but we build with a newer JDK: pom.xml's <release>8> makes javac
+      # both restrict syntax to JDK 8 and check against the real JDK 8 API - a
+      # check only available on JDK 9+ compilers. JDK 8's own javac has no
+      # --release flag at all, so building directly with JDK 8 here would fail.
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Validate version input
+        run: |
+          version="${{ inputs.version }}"
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Version must look like X.Y.Z (got: $version)"
+            exit 1
+          fi
+          if gh release view "$version" --repo "${{ github.repository }}" >/dev/null 2>&1; then
+            echo "::error::A release tagged '$version' already exists."
+            exit 1
+          fi
+
+      # Sets the exact requested version as this build's artifact version,
+      # regardless of whatever version is currently committed in pom.xml.
+      - name: Set release version
+        run: mvn -B versions:set -DnewVersion=${{ inputs.version }} -DgenerateBackupPoms=false
+
+      - name: Build with Maven
+        run: mvn -B clean package -DskipTests
+
+      - name: Verify built artifacts match the requested version
+        run: |
+          jar="target/nri-as400-${{ inputs.version }}.jar"
+          dist="target/nri-as400-${{ inputs.version }}-distribution.tar.gz"
+          test -f "$jar" || (echo "::error::Expected $jar not found" && exit 1)
+          test -f "$dist" || (echo "::error::Expected $dist not found" && exit 1)
+
+      - name: Create GitHub Release and upload artifacts
+        run: |
+          gh release create "${{ inputs.version }}" \
+            "target/nri-as400-${{ inputs.version }}.jar" \
+            "target/nri-as400-${{ inputs.version }}-distribution.tar.gz" \
+            --title "Release v${{ inputs.version }}" \
+            --generate-notes

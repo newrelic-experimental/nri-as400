@@ -477,7 +477,7 @@ public class GetSystemStatus {
 		String strNrName = "com.newrelic.as400-system-status";
 		String strNrEventType = "AS400:SystemStatusEvent";
 		String strNrProtoVersion = "1";
-		String strNrIntVersion = "0.2.0";
+		String strNrIntVersion = CommonUtil.getIntegrationVersion();
 		String strJSONMetrics = "";
 		String strJSONHeader = ("{" + "\"name\":" + '"' + strNrName + '"' + "," + "\"protocol_version\":" + '"' + strNrProtoVersion + '"' + "," + "\"integration_version\":" + '"' + strNrIntVersion + '"' + "," + "\"metrics\":" + "[");
 		String strJSONFooter = ("]," + "\"inventory\":" + "{" + "}," + "\"events\":" + "[" + "]" + "}");

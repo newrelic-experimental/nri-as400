@@ -465,7 +465,7 @@ public class GetMemoryStatus {
 		String strNrName = "com.newrelic.as400-memory-status";
 		String strNrEventType = "AS400:MemoryStatusEvent";
 		String strNrProtoVersion = "1";
-		String strNrIntVersion = "0.2.0";
+		String strNrIntVersion = CommonUtil.getIntegrationVersion();
 		String strJSONMetrics = "";
 		String strJSONHeader = ("{" + "\"name\":" + '"' + strNrName + '"' + "," + "\"protocol_version\":" + '"' + strNrProtoVersion + '"' + "," + "\"integration_version\":" + '"' + strNrIntVersion + '"' + "," + "\"metrics\":" + "[");
 		String strJSONFooter = ("]," + "\"inventory\":" + "{" + "}," + "\"events\":" + "[" + "]" + "}");

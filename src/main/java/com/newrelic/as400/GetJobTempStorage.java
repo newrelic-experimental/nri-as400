@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GetJobTempStorage {
-    String Version = "\"integration_version\":\"0.2.0\",";
+    String Version = "\"integration_version\":\"" + CommonUtil.getIntegrationVersion() + "\",";
 
     public GetJobTempStorage() {
     }

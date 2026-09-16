@@ -17,7 +17,7 @@ import java.util.Set;
 
 public class GetDiskUsage {
     DecimalFormat usageFormat = new DecimalFormat("0.00%");
-    String Version= "\"integration_version\":\"0.2.0\",";
+    String Version= "\"integration_version\":\"" + CommonUtil.getIntegrationVersion() + "\",";
 
     public GetDiskUsage() {
     }

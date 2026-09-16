@@ -52,7 +52,7 @@ public class GetJobList {
 
 	// Json descriptor fields
 	private static String s_strNrName = "com.newrelic.as400-job-list";
-	private static String s_strNrIntVersion = "0.2.0";
+	private static String s_strNrIntVersion = CommonUtil.getIntegrationVersion();
 	private static String s_strNrProtoVersion = "1";
 
 	

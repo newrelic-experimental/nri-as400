@@ -50,7 +50,7 @@ public class GetMsgQueue {
 		String strNrName = "com.newrelic.as400-message-queue";
 		String strNrEventType = "AS400:MessageQueueEvent";
 		String strNrProtoVersion = "1";
-		String strNrIntVersion = "0.1.0";
+		String strNrIntVersion = CommonUtil.getIntegrationVersion();
 		String strJSONMetrics = "";
 		boolean bFirstRun = true;
 		String strNrEventSummary = "AS400 message queue messages";
