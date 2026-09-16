@@ -23,14 +23,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Runtime target for this integration is JDK 8 (some customers still run it there).
-      # We build with JDK 8 directly here, and pom.xml additionally pins
-      # <maven.compiler.release>8, so a build on a newer JDK would also reject
-      # any accidental use of newer-than-8 APIs.
-      - name: Set up JDK 8
+      # Runtime target for this integration is JDK 8 (some customers still run it
+      # there), but we build with a newer JDK: pom.xml's <release>8> makes javac
+      # both restrict syntax to JDK 8 and check against the real JDK 8 API - a
+      # check only available on JDK 9+ compilers. JDK 8's own javac has no
+      # --release flag at all, so building directly with JDK 8 here would fail.
+      - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: '8'
+          java-version: '21'
           distribution: 'temurin'
 
       - name: Validate version input

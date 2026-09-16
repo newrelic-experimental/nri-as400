@@ -1,7 +1,9 @@
 # syntax=docker/dockerfile:1
 
-# Build the nri-as400 shaded jar
-FROM maven:3.9-eclipse-temurin-8 AS build
+# Build with a modern JDK; pom.xml's <release>8</release> targets JDK 8
+# bytecode regardless (JDK 8's own compiler doesn't support --release at all,
+# so building directly with JDK 8 here would fail).
+FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /build
 COPY pom.xml LICENSE README.md .
 COPY src ./src
