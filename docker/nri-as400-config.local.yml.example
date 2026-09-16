@@ -10,6 +10,16 @@ instances:
       retrieve_msgw: false
     labels:
       environment: production
+  - name: my_as400_queue_QSYSOPR
+    command: message-queue
+    arguments:
+      instance: my_as400.QSYSOPR
+      as400host: your.as400.host
+      msgqueue: /QSYS.LIB/QSYSOPR.MSGQ
+      userid: YOURUSERID
+      passwd: your_password
+    labels:
+      environment: production
   - name: my_as400_status
     command: system-status
     arguments:

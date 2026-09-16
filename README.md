@@ -28,7 +28,7 @@ iSeries / AS400 monitoring solution for New Relic Infrastructure. Actually split
 
 - Unzip/gunzip nri-as400 package on host where NRI Agent is installed
 - Test your credentials and parameters with [`nri-as400-test.sh`](#testing-with-nri-as400-testsh)
-- Edit `nri-as400/nri-as400-config.yml`, configuring instances of the 5 OHIs outlined below as needed.
+- Edit `nri-as400/nri-as400-config.yml`, configuring instances of the 9 OHIs outlined below as needed.
   - [as400-job-list - iSeries Active Jobs](#config-as400-job-list)
   - [as400-memory-status - iSeries Server Memory Usage KPIs](#config-as400-memory-status)
   - [as400-message-queue - iSeries Message Queues](#config-as400-message-queue)
@@ -100,6 +100,8 @@ instances:
       userid: USER0465
       passwd: user0465
       reset_wait_delay: 100
+      # optional, all 9 commands accept this - see "hostname_override" note above
+      hostname_override: pub400-prod
 ```
 
 * `name`: The name of the instance, usually the host and "_jobs"
@@ -108,6 +110,7 @@ instances:
 * `passwd`: The password for the user.
 * `reset_wait_delay`: The delay interval (in ms) between resetting stats and capturing them - optional, default to 100ms
 * `retrieve_msgw`: Retrieves the outstanding last message for jobs with an active job status of MSGW. Optional, default to false
+* `hostname_override`: Optional, all 9 commands accept this. Reports a different `hostName` attribute value than `as400host` (e.g. a friendly name instead of the raw connection string).
 
 #### Notes
 * This OHI can be configured to pull job data from multiple iSeries servers
